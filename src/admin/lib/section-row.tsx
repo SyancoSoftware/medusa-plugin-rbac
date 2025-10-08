@@ -1,7 +1,6 @@
 import { clx, Text } from "@medusajs/ui";
 import React from "react";
 
-
 export const SectionRow: React.FC<{
     title: string;
     value?: string | React.ReactNode;
