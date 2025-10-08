@@ -1,3 +1,5 @@
+import { sdk } from "./sdk";
+
 import React, { useState, useEffect, useMemo } from "react";
 import {
   Button,
@@ -56,10 +58,9 @@ const AvailableRolesList: React.FC<{
     if (!isLoading) {
       return;
     }
-    fetch(`/admin/rbac/roles`, {
-      credentials: "include",
+    sdk.client.fetch(`/admin/rbac/roles`, {
     })
-      .then((res) => res.json() as Promise<RbacRole[]>)
+      .then((res) => (res as Response).json() as Promise<RbacRole[]>)
       .then((roles2) => {
         setRoles(roles2);
         setLoading(false);
@@ -145,9 +146,8 @@ function MembersTableComponent() {
   const [members, setMembers] = useState<MemberWithRole[]>([]);
   const [isLoading, setLoading] = useState<boolean>(true);
   const assignRole = (roleId: string, userId: string) => {
-    fetch(`/admin/rbac/members/assignments`, {
+    sdk.client.fetch(`/admin/rbac/members/assignments`, {
       method: "POST",
-      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -156,7 +156,7 @@ function MembersTableComponent() {
         roleId,
       }),
     })
-      .then((res) => res.json() as Promise<{ message?: string }>)
+      .then((res) => (res as Response).json() as Promise<{ message?: string }>)
       .then(({ message }) => {
         setLoading(true);
         if (message) {
@@ -172,10 +172,9 @@ function MembersTableComponent() {
     if (!isLoading) {
       return;
     }
-    fetch(`/admin/rbac/members`, {
-      credentials: "include",
+    sdk.client.fetch(`/admin/rbac/members`, {
     })
-      .then((res) => res.json() as Promise<MemberWithRole[]>)
+      .then((res) => (res as Response).json() as Promise<MemberWithRole[]>)
       .then((result) => {
         setMembers(result);
         setLoading(false);

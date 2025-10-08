@@ -1,12 +1,13 @@
+import { sdk } from "./sdk";
+
 import { Trash } from "@medusajs/icons";
 import { Prompt, IconButton } from "@medusajs/ui";
 import { RbacPermissionCategory } from "./types";
 
 export const DeleteCategory: React.FC<{ category: RbacPermissionCategory; reloadTable: () => void }> = ({ category, reloadTable }) => {
     const handleAction = () => {
-        fetch(`/admin/rbac/categories`, {
+        sdk.client.fetch(`/admin/rbac/categories`, {
             method: "DELETE",
-            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -14,7 +15,7 @@ export const DeleteCategory: React.FC<{ category: RbacPermissionCategory; reload
                 id: category.id,
             }),
         })
-            .then((res) => res.json())
+            .then((res) => (res as Response).json())
             .then(({ message }) => {
                 reloadTable();
                 if (message) {

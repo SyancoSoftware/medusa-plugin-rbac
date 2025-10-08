@@ -1,3 +1,5 @@
+import { sdk } from "./sdk";
+
 import {
     Text,
     Switch,
@@ -26,10 +28,9 @@ export const PermissionsPredefinedArea = () => {
         if (!isLoading) {
             return;
         }
-        fetch(`/admin/rbac/permissions?${params.toString()}`, {
-            credentials: "include",
+        sdk.client.fetch(`/admin/rbac/permissions?${params.toString()}`, {
         })
-            .then((res) => res.json())
+            .then((res) => (res as Response).json())
             .then((permissions2) => {
                 setPermissions(permissions2);
                 setLoading(false);
@@ -42,10 +43,9 @@ export const PermissionsPredefinedArea = () => {
         if (!isLoading) {
             return;
         }
-        fetch(`/admin/rbac/categories?${params.toString()}`, {
-            credentials: "include",
+        sdk.client.fetch(`/admin/rbac/categories?${params.toString()}`, {
         })
-            .then((res) => res.json())
+            .then((res) => (res as Response).json())
             .then((categories2) => {
                 setCategories(categories2);
                 setLoading(false);

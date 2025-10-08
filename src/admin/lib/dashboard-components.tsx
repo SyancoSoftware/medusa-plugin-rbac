@@ -1,3 +1,5 @@
+import { sdk } from "./sdk";
+
 import React, { useState, useEffect } from "react";
 import { Container, Heading, Text, Button,  } from "@medusajs/ui";
 import { Grid } from "./grid";
@@ -19,10 +21,9 @@ export const DashboardMembersCard: React.FC = () => {
     if (!isLoading) {
       return;
     }
-    fetch(`/admin/rbac/members`, {
-      credentials: "include",
+    sdk.client.fetch(`/admin/rbac/members`, {
     })
-      .then((res) => res.json() as Promise<MemberWithRole[]>)
+      .then((res) => (res as Response).json() as Promise<MemberWithRole[]>)
       .then((result) => {
         setMembers(result);
         setLoading(false);
@@ -85,10 +86,9 @@ export const DashboardRolesCard = () => {
     if (!isLoading) {
       return;
     }
-    fetch(`/admin/rbac/roles`, {
-      credentials: "include",
+    sdk.client.fetch(`/admin/rbac/roles`, {
     })
-      .then((res) => res.json() as Promise<RoleWithUsers[]>)
+      .then((res) => (res as Response).json() as Promise<RoleWithUsers[]>)
       .then((roles2) => {
         setRoles(roles2);
         setLoading(false);
@@ -196,10 +196,9 @@ export const DashboardAssignedRolesCard: React.FC = () => {
     if (!isLoading) {
       return;
     }
-    fetch(`/admin/rbac/roles`, {
-      credentials: "include",
+    sdk.client.fetch(`/admin/rbac/roles`, {
     })
-      .then((res) => res.json() as Promise<RbacRole[]>)
+      .then((res) => (res as Response).json() as Promise<RbacRole[]>)
       .then((roles2) => {
         const sorted = roles2
           .slice()
@@ -234,10 +233,9 @@ export const DashboardPermissionsCard: React.FC = () => {
     if (!isLoading) {
       return;
     }
-    fetch(`/admin/rbac/permissions`, {
-      credentials: "include",
+    sdk.client.fetch(`/admin/rbac/permissions`, {
     })
-      .then((res) => res.json() as Promise<RbacPermission[]>)
+      .then((res) => (res as Response).json() as Promise<RbacPermission[]>)
       .then((result) => {
         setPermissions(result);
         setLoading(false);

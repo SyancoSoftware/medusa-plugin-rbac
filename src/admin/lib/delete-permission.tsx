@@ -1,3 +1,5 @@
+import { sdk } from "./sdk";
+
 import {
     IconButton,
     Prompt,
@@ -12,9 +14,8 @@ export const DeletePermission: React.FC<{
     reloadTable: () => void;
   }> = ({ permissionId, reloadTable }) => {
     const handleAction = () => {
-      fetch(`/admin/rbac/permissions`, {
+      sdk.client.fetch(`/admin/rbac/permissions`, {
         method: "DELETE",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -22,7 +23,7 @@ export const DeletePermission: React.FC<{
           id: permissionId,
         }),
       })
-        .then((res) => res.json() as Promise<{ message?: string }>)
+        .then((res) => (res as Response).json() as Promise<{ message?: string }>)
         .then(({ message }) => {
           reloadTable();
           if (message) {

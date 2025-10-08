@@ -5,3 +5,4 @@ export * from "./dashboard-components";
 export * from "./checks";
 export * from "./members-table";
 export * from "./authorization";
+export { sdk } from "./sdk";

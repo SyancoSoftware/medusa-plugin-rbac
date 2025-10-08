@@ -1,3 +1,5 @@
+import { sdk } from "./sdk";
+
 import {
     Alert,
     Heading,
@@ -219,9 +221,8 @@ const DrawerCreateCategory: React.FC<{ reload: () => void }> = ({ reload }) => {
     const [categoryName, setCategoryName] = useState<string | undefined>(undefined);
     const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
     const onSubmit = () => {
-        fetch(`/admin/rbac/categories`, {
+        sdk.client.fetch(`/admin/rbac/categories`, {
             method: "POST",
-            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -230,13 +231,13 @@ const DrawerCreateCategory: React.FC<{ reload: () => void }> = ({ reload }) => {
             }),
         })
             .then(async (response) => {
-                if (response.ok) {
+                if ((response as Response).ok) {
                     reload();
                     toast.info("New category has been created", {
                         description: "You can now select it from the list.",
                     });
                 } else {
-                    const error = await response.json();
+                    const error = await (response as Response).json();
                     toast.error("Error", {
                         description: `New category cannot be created. ${error.message}`,
                     });
@@ -308,10 +309,9 @@ const SelectCategory: React.FC<{
         if (!isLoading) {
             return;
         }
-        fetch(`/admin/rbac/categories`, {
-            credentials: "include",
+        sdk.client.fetch(`/admin/rbac/categories`, {
         })
-            .then((res) => res.json())
+            .then((res) => (res as Response).json())
             .then((result) => {
                 setCategories(result);
                 setLoading(false);
@@ -495,9 +495,8 @@ const CreatePermissionModal: React.FC<{ reloadTable: () => void }> = ({ reloadTa
         return partialFormValidation(tab);
     };
     const onSubmit = (data: { name: string; matcher: string }) => {
-        fetch(`/admin/rbac/permissions`, {
+        sdk.client.fetch(`/admin/rbac/permissions`, {
             method: "POST",
-            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -511,14 +510,14 @@ const CreatePermissionModal: React.FC<{ reloadTable: () => void }> = ({ reloadTa
             }),
         })
             .then(async (response) => {
-                if (response.ok) {
+                if ((response as Response).ok) {
                     toast.info("Permission", {
                         description: "New permission has been created",
                     });
                     reloadTable();
                     setIsOpen(false);
                 } else {
-                    const error = await response.json();
+                    const error = await (response as Response).json();
                     toast.error("Permission", {
                         description: `New permission cannot be created. ${error.message}`,
                     });
@@ -695,10 +694,9 @@ export const PermissionsCustomArea = () => {
         if (!isLoading) {
             return;
         }
-        fetch(`/admin/rbac/permissions?${params.toString()}`, {
-            credentials: "include",
+        sdk.client.fetch(`/admin/rbac/permissions?${params.toString()}`, {
         })
-            .then((res) => res.json())
+            .then((res) => (res as Response).json())
             .then((permissions2) => {
                 setPermissions(permissions2);
                 setLoading(false);
@@ -711,10 +709,9 @@ export const PermissionsCustomArea = () => {
         if (!isLoadingCategories) {
             return;
         }
-        fetch(`/admin/rbac/categories?${params.toString()}`, {
-            credentials: "include",
+        sdk.client.fetch(`/admin/rbac/categories?${params.toString()}`, {
         })
-            .then((res) => res.json())
+            .then((res) => (res as Response).json())
             .then((categories2) => {
                 setCategories(categories2);
                 setLoadingCategories(false);

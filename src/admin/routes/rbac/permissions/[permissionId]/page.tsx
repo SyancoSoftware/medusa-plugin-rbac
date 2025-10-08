@@ -11,9 +11,9 @@ import {
     Pencil,
 } from "@medusajs/icons";
 import { useParams } from "react-router-dom";
-import { Grid, LoadingSpinner, RbacPermission } from "../../../lib";
-import { Header } from "../../../lib/header";
-import { SectionRow } from "../../../lib/section-row";
+import { Grid, LoadingSpinner, RbacPermission, sdk } from "../../../../lib";
+import { Header } from "../../../../lib/header";
+import { SectionRow } from "../../../../lib/section-row";
 
 
 const SingleColumnLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -98,15 +98,14 @@ const RbacPermissionGeneral: React.FC<{
 }> = ({ rbacPermission, reloadTable }) => {
     const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
     function updatePermission(permission: RbacPermission) {
-        fetch(`/admin/rbac/permissions/${permission.id}`, {
+        sdk.client.fetch(`/admin/rbac/permissions/${permission.id}`, {
             method: "POST",
-            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(permission),
         })
-            .then((res) => res.json())
+            .then((res) => (res as Response).json())
             .then(({ message }) => {
                 reloadTable();
                 setDrawerIsOpen(false);
@@ -169,10 +168,8 @@ export const RbacPermissionPage = () => {
         if (!isLoading) {
             return;
         }
-        fetch(`/admin/rbac/permissions/${permissionId}`, {
-            credentials: "include",
-        })
-            .then((res) => res.json())
+        sdk.client.fetch(`/admin/rbac/permissions/${permissionId}`)
+            .then((res) => (res as Response).json())
             .then((result) => {
                 setPermission({
                     ...result.permission,

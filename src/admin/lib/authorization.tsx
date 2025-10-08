@@ -5,6 +5,7 @@ import {
   PermissionActionType,
   RoleWithUsers,
 } from "./types";
+import { sdk } from "./sdk";
 
 const isAuthorizationCheckResult = (
   value: unknown,
@@ -56,9 +57,8 @@ export const TestMyAuthorization: React.FC<{ urlToTest: string }> = ({
     if (!isLoading) {
       return;
     }
-    fetch(`/admin/rbac/check`, {
+    sdk.client.fetch(`/admin/rbac/check`, {
       method: "POST",
-      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -66,7 +66,7 @@ export const TestMyAuthorization: React.FC<{ urlToTest: string }> = ({
         urlToTest,
       }),
     })
-      .then((res) => res.json() as Promise<RoleWithUsers[]>)
+      .then((res) => (res as Response).json() as Promise<RoleWithUsers[]>)
       .then((responseJson) => {
         if (isAuthorizationCheckResult(responseJson)) {
           setAuthorizationResult(responseJson);

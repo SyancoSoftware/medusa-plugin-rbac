@@ -15,10 +15,10 @@ import {
     Pencil,
   } from "@medusajs/icons";
   import { useParams } from "react-router-dom";
-import { AdminRbacPolicyType, ApiUser, Grid, LoadingSpinner, RbacPermissionCategory, RbacPolicy, RbacRole, RoleWithUsers } from "../../../lib";
-import { SingleColumnLayout } from "../../../lib/single-column-layout";
-import { Header } from "../../../lib/header";
-import { SectionRow } from "../../../lib/section-row";
+import { AdminRbacPolicyType, ApiUser, Grid, LoadingSpinner, RbacPermissionCategory, RbacPolicy, RbacRole, RoleWithUsers, sdk } from "../../../../lib";
+import { SingleColumnLayout } from "../../../../lib/single-column-layout";
+import { Header } from "../../../../lib/header";
+import { SectionRow } from "../../../../lib/section-row";
 
 const DrawerEditRoleGeneral: React.FC<{
     drawerIsOpen: boolean;
@@ -105,15 +105,14 @@ const DrawerEditRoleGeneral: React.FC<{
   }> = ({ rbacRole, reloadTable }) => {
     const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
     function updateRole(role: RbacRole) {
-      fetch(`/admin/rbac/roles/${rbacRole.id}`, {
+      sdk.client.fetch(`/admin/rbac/roles/${rbacRole.id}`, {
         method: "POST",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(role),
       })
-        .then((res) => res.json())
+        .then((res) => (res as Response).json())
         .then(({ message }) => {
           reloadTable();
           setDrawerIsOpen(false);
@@ -482,10 +481,8 @@ const DrawerEditRoleGeneral: React.FC<{
       if (!isLoading) {
         return;
       }
-      fetch(`/admin/rbac/roles/${roleId}`, {
-        credentials: "include",
-      })
-        .then((res) => res.json())
+      sdk.client.fetch(`/admin/rbac/roles/${roleId}`)
+        .then((res) => (res as Response).json())
         .then((result) => {
           setRole({
             ...result.role,

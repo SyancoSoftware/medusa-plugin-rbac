@@ -1,4 +1,6 @@
-import { Toaster, Table, Button, FocusModal, ProgressTabs, toast, Alert, Heading, Text, Input, Label, Badge, Drawer, Switch, Select, Prompt, IconButton } from "@medusajs/ui";
+import { sdk } from "./sdk";
+
+import { Toaster, Table, Button, FocusModal, ProgressTabs, toast, Alert, Heading, Text, Input, Label, Drawer, Switch, Select, Prompt, IconButton } from "@medusajs/ui";
 import React, { useState, useEffect, useMemo } from "react";
 import { Grid } from "./grid";
 import { Header } from "./header";
@@ -59,43 +61,6 @@ const tabOrder = [
     /* POLICIES */
 ];
 
-const PermissionView: React.FC<{ policies: RbacPolicy[] }> = ({ policies }) => {
-    return (
-        <Table>
-            <Table.Header>
-                <Table.Row>
-                    <Table.HeaderCell>Name</Table.HeaderCell>
-                    <Table.HeaderCell>Type</Table.HeaderCell>
-                    <Table.HeaderCell>Target</Table.HeaderCell>
-                    <Table.HeaderCell>Action</Table.HeaderCell>
-                    <Table.HeaderCell>Decision</Table.HeaderCell>
-                </Table.Row>
-            </Table.Header>
-            <Table.Body>
-                {policies.map((policy: RbacPolicy) => {
-                    return (
-                        <Table.Row key={policy.id}>
-                            <Table.Cell>{`${policy.permission.name}`}</Table.Cell>
-                            <Table.Cell>{policy.permission.matcherType}</Table.Cell>
-                            <Table.Cell>{`${policy.permission.matcher}`}</Table.Cell>
-                            <Table.Cell>{`${policy.permission.actionType}`}</Table.Cell>
-                            <Table.Cell>
-                                <Badge
-                                    color={
-                                        policy.type === AdminRbacPolicyType.ALLOW ? "green" : "red"
-                                    }
-                                >
-                                    {policy.type.toUpperCase()}
-                                </Badge>
-                            </Table.Cell>
-                            {policy.id}
-                        </Table.Row>
-                    );
-                })}
-            </Table.Body>
-        </Table>
-    );
-};
 
 const CategoryView: React.FC<{
     policies: RbacPolicy[];
@@ -357,10 +322,9 @@ const AvailableRolesList: React.FC<{
         if (!isLoading) {
             return;
         }
-        fetch(`/admin/rbac/roles`, {
-            credentials: "include",
+        sdk.client.fetch(`/admin/rbac/roles`, {
         })
-            .then((res) => res.json() as Promise<RbacRole[]>)
+            .then((res) => (res as Response).json() as Promise<RbacRole[]>)
             .then((roles2) => {
                 setRoles(roles2);
                 setLoading(false);
@@ -547,10 +511,9 @@ const CreateRoleModal: React.FC<{ reloadTable: () => void }> = ({ reloadTable })
         if (!isLoading) {
             return;
         }
-        fetch(`/admin/rbac/permissions`, {
-            credentials: "include",
+        sdk.client.fetch(`/admin/rbac/permissions`, {
         })
-            .then((res) => res.json() as Promise<RbacPermission[]>)
+            .then((res) => (res as Response).json() as Promise<RbacPermission[]>)
             .then((permissions) => {
                 const initialPolicies = permissions.map((perm): Omit<RbacPolicy, 'id'> => {
                     return {
@@ -576,9 +539,8 @@ const CreateRoleModal: React.FC<{ reloadTable: () => void }> = ({ reloadTable })
         return partialFormValidation(tab);
     };
     const onSubmit = (data: { name: string }) => {
-        fetch(`/admin/rbac/roles`, {
+        sdk.client.fetch(`/admin/rbac/roles`, {
             method: "POST",
-            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -587,7 +549,7 @@ const CreateRoleModal: React.FC<{ reloadTable: () => void }> = ({ reloadTable })
                 policies,
             }),
         })
-            .then((res) => res.json() as Promise<{ message?: string }>)
+            .then((res) => (res as Response).json() as Promise<{ message?: string }>)
             .then(({ message }) => {
                 toast.info("Role", {
                     description: "New role has been created",
@@ -739,9 +701,8 @@ const CreateRoleModal: React.FC<{ reloadTable: () => void }> = ({ reloadTable })
 };
 const DeleteRole: React.FC<{ roleId: string; setLoading: (loading: boolean) => void }> = ({ roleId, setLoading }) => {
     const handleAction = () => {
-        fetch(`/admin/rbac/roles`, {
+        sdk.client.fetch(`/admin/rbac/roles`, {
             method: "DELETE",
-            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -749,7 +710,7 @@ const DeleteRole: React.FC<{ roleId: string; setLoading: (loading: boolean) => v
                 id: roleId,
             }),
         })
-            .then((res) => res.json())
+            .then((res) => (res as Response).json())
             .then(({ message }) => {
                 setLoading(true);
                 if (message) {
@@ -800,10 +761,9 @@ function RolesTable$() {
         if (!isLoading) {
             return;
         }
-        fetch(`/admin/rbac/roles`, {
-            credentials: "include",
+        sdk.client.fetch(`/admin/rbac/roles`, {
         })
-            .then((res) => res.json() as Promise<RbacRole[]>)
+            .then((res) => (res as Response).json() as Promise<RbacRole[]>)
             .then((roles2) => {
                 setRoles(roles2);
                 setLoading(false);

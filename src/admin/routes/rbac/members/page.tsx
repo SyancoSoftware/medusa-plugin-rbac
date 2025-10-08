@@ -1,6 +1,6 @@
 import { defineRouteConfig } from "@medusajs/admin-sdk";
 import { Container, Heading } from "@medusajs/ui";
-import { Grid, RbacLicenceCheck, RbacAuthorizationCheck, MembersTable } from "../../lib";
+import { Grid, RbacLicenceCheck, RbacAuthorizationCheck, MembersTable } from "../../../lib";
 
 const MembersPage = () => {
   return (

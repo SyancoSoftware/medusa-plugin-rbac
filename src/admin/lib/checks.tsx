@@ -1,3 +1,5 @@
+import { sdk } from "./sdk";
+
 import React, { useState, useEffect } from "react";
 import { Alert } from "@medusajs/ui";
 import { LoadingSpinner } from "./loading-spinner";
@@ -15,9 +17,8 @@ export const RbacAuthorizationCheck: React.FC<{ children: React.ReactNode }> = (
     if (!isLoading) {
       return;
     }
-    fetch(`/admin/rbac/check`, {
+    sdk.client.fetch(`/admin/rbac/check`, {
       method: "POST",
-      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -25,7 +26,7 @@ export const RbacAuthorizationCheck: React.FC<{ children: React.ReactNode }> = (
         urlToTest: `/admin/rbac`,
       }),
     })
-      .then((res) => res.json() as Promise<AuthorizationCheckResult>)
+      .then((res) => (res as Response).json() as Promise<AuthorizationCheckResult>)
       .then((responseJson) => {
         setAuthorizationResult(responseJson);
         setLoading(false);
@@ -58,10 +59,9 @@ export const RbacLicenceCheck: React.FC<{ children: React.ReactNode }> = ({
     if (!isLoading) {
       return;
     }
-    fetch(`/admin/licence`, {
-      credentials: "include",
+    sdk.client.fetch(`/admin/licence`, {
     })
-      .then((res) => res.json() as Promise<{ licence: string }>)
+      .then((res) => (res as Response).json() as Promise<{ licence: string }>)
       .then((result) => {
         setLicenceStatus(result.licence);
         setLoading(false);

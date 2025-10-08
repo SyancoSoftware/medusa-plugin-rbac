@@ -6,9 +6,9 @@ import {
   RbacLicenceCheck,
   RbacAuthorizationCheck,
   PermissionType,
-} from "../../lib";
-import { PermissionsPredefinedArea } from "../../lib/permission-predefined-area";
-import { PermissionsCustomArea } from "../../lib/permissions-custom-area";
+} from "../../../lib";
+import { PermissionsPredefinedArea } from "../../../lib/permission-predefined-area";
+import { PermissionsCustomArea } from "../../../lib/permissions-custom-area";
 
 const PermissionsTable: React.FC<{ permissionType: PermissionType }> = ({
   permissionType,
