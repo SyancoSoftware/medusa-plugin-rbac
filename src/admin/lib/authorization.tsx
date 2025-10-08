@@ -61,9 +61,7 @@ export const TestMyAuthorization: React.FC<{ urlToTest: string }> = ({
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        urlToTest,
-      }),
+      body: urlToTest,
     })
       .then((responseJson) => {
         if (isAuthorizationCheckResult(responseJson)) {

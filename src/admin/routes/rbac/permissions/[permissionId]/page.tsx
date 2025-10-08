@@ -103,7 +103,7 @@ const RbacPermissionGeneral: React.FC<{
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(permission),
+            body: permission,
         })
             .then(({ message }) => {
                 reloadTable();

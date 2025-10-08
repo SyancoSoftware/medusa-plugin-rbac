@@ -24,9 +24,9 @@ export const RbacAuthorizationCheck: React.FC<{ children: React.ReactNode }> = (
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
+      body: {
         urlToTest: `/admin/rbac`,
-      }),
+      },
     })
       .then((responseJson) => {
         setAuthorizationResult(responseJson);

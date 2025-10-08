@@ -11,9 +11,9 @@ export const DeleteCategory: React.FC<{ category: RbacPermissionCategory; reload
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
+            body: {
                 id: category.id,
-            }),
+            },
         })
             .then(({ message }) => {
                 reloadTable();

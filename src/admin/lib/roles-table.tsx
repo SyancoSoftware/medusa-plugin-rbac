@@ -542,10 +542,10 @@ const CreateRoleModal: React.FC<{ reloadTable: () => void }> = ({ reloadTable })
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
+            body: {
                 name: data.name,
                 policies,
-            }),
+            },
         })
             .then(({ message }) => {
                 toast.info("Role", {
@@ -703,9 +703,9 @@ const DeleteRole: React.FC<{ roleId: string; setLoading: (loading: boolean) => v
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
+            body: {
                 id: roleId,
-            }),
+            },
         })
             .then(({ message }) => {
                 setLoading(true);

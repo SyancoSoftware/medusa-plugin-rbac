@@ -19,9 +19,9 @@ export const DeletePermission: React.FC<{
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
+        body: {
           id: permissionId,
-        }),
+        },
       })
         .then(({ message }) => {
           reloadTable();

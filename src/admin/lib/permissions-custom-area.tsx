@@ -226,9 +226,9 @@ const DrawerCreateCategory: React.FC<{ reload: () => void }> = ({ reload }) => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
+            body: {
                 name: categoryName,
-            }),
+            },
         })
             .then(async (response) => {
                 if (response.ok) {
@@ -498,14 +498,14 @@ const CreatePermissionModal: React.FC<{ reloadTable: () => void }> = ({ reloadTa
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
+            body: {
                 name: data.name,
                 type: PermissionType.CUSTOM,
                 matcherType,
                 matcher: data.matcher,
                 actionType,
                 category,
-            }),
+            }
         })
             .then(async (response) => {
                 if (response.ok) {
