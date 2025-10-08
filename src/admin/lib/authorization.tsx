@@ -3,7 +3,6 @@ import { Container, Alert } from "@medusajs/ui";
 import {
   AuthorizationCheckResult,
   PermissionActionType,
-  RoleWithUsers,
 } from "./types";
 import { sdk } from "./sdk";
 
@@ -66,7 +65,6 @@ export const TestMyAuthorization: React.FC<{ urlToTest: string }> = ({
         urlToTest,
       }),
     })
-      .then((res) => (res as Response).json() as Promise<RoleWithUsers[]>)
       .then((responseJson) => {
         if (isAuthorizationCheckResult(responseJson)) {
           setAuthorizationResult(responseJson);

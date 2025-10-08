@@ -6,7 +6,7 @@ import { RbacPermissionCategory } from "./types";
 
 export const DeleteCategory: React.FC<{ category: RbacPermissionCategory; reloadTable: () => void }> = ({ category, reloadTable }) => {
     const handleAction = () => {
-        sdk.client.fetch(`/admin/rbac/categories`, {
+        sdk.client.fetch<{ message: string }>(`/admin/rbac/categories`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -15,7 +15,6 @@ export const DeleteCategory: React.FC<{ category: RbacPermissionCategory; reload
                 id: category.id,
             }),
         })
-            .then((res) => (res as Response).json())
             .then(({ message }) => {
                 reloadTable();
                 if (message) {

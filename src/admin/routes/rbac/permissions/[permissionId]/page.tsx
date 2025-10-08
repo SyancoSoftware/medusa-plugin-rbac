@@ -98,14 +98,13 @@ const RbacPermissionGeneral: React.FC<{
 }> = ({ rbacPermission, reloadTable }) => {
     const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
     function updatePermission(permission: RbacPermission) {
-        sdk.client.fetch(`/admin/rbac/permissions/${permission.id}`, {
+        sdk.client.fetch<{ message: string }>(`/admin/rbac/permissions/${permission.id}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(permission),
         })
-            .then((res) => (res as Response).json())
             .then(({ message }) => {
                 reloadTable();
                 setDrawerIsOpen(false);
@@ -168,8 +167,7 @@ export const RbacPermissionPage = () => {
         if (!isLoading) {
             return;
         }
-        sdk.client.fetch(`/admin/rbac/permissions/${permissionId}`)
-            .then((res) => (res as Response).json())
+        sdk.client.fetch<{ permission: RbacPermission }>(`/admin/rbac/permissions/${permissionId}`)
             .then((result) => {
                 setPermission({
                     ...result.permission,

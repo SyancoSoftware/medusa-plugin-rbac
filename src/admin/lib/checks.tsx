@@ -5,6 +5,8 @@ import { Alert } from "@medusajs/ui";
 import { LoadingSpinner } from "./loading-spinner";
 import { Grid } from "./grid";
 import { AuthorizationCheckResult } from "./types";
+import { LicenceStatus } from "../../modules/rbac/service";
+
 
 export const RbacAuthorizationCheck: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -17,7 +19,7 @@ export const RbacAuthorizationCheck: React.FC<{ children: React.ReactNode }> = (
     if (!isLoading) {
       return;
     }
-    sdk.client.fetch(`/admin/rbac/check`, {
+    sdk.client.fetch<AuthorizationCheckResult>(`/admin/rbac/check`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -26,7 +28,6 @@ export const RbacAuthorizationCheck: React.FC<{ children: React.ReactNode }> = (
         urlToTest: `/admin/rbac`,
       }),
     })
-      .then((res) => (res as Response).json() as Promise<AuthorizationCheckResult>)
       .then((responseJson) => {
         setAuthorizationResult(responseJson);
         setLoading(false);
@@ -59,9 +60,8 @@ export const RbacLicenceCheck: React.FC<{ children: React.ReactNode }> = ({
     if (!isLoading) {
       return;
     }
-    sdk.client.fetch(`/admin/licence`, {
+    sdk.client.fetch<{ licence: LicenceStatus }>(`/admin/licence`, {
     })
-      .then((res) => (res as Response).json() as Promise<{ licence: string }>)
       .then((result) => {
         setLicenceStatus(result.licence);
         setLoading(false);

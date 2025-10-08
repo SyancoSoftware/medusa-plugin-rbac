@@ -221,7 +221,7 @@ const DrawerCreateCategory: React.FC<{ reload: () => void }> = ({ reload }) => {
     const [categoryName, setCategoryName] = useState<string | undefined>(undefined);
     const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
     const onSubmit = () => {
-        sdk.client.fetch(`/admin/rbac/categories`, {
+        sdk.client.fetch<{ ok: boolean; message?: string }>(`/admin/rbac/categories`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -231,15 +231,14 @@ const DrawerCreateCategory: React.FC<{ reload: () => void }> = ({ reload }) => {
             }),
         })
             .then(async (response) => {
-                if ((response as Response).ok) {
+                if (response.ok) {
                     reload();
                     toast.info("New category has been created", {
                         description: "You can now select it from the list.",
                     });
                 } else {
-                    const error = await (response as Response).json();
                     toast.error("Error", {
-                        description: `New category cannot be created. ${error.message}`,
+                        description: `New category cannot be created. ${response.message}`,
                     });
                 }
             })
@@ -309,9 +308,8 @@ const SelectCategory: React.FC<{
         if (!isLoading) {
             return;
         }
-        sdk.client.fetch(`/admin/rbac/categories`, {
+        sdk.client.fetch<RbacPermissionCategory[]>(`/admin/rbac/categories`, {
         })
-            .then((res) => (res as Response).json())
             .then((result) => {
                 setCategories(result);
                 setLoading(false);
@@ -495,7 +493,7 @@ const CreatePermissionModal: React.FC<{ reloadTable: () => void }> = ({ reloadTa
         return partialFormValidation(tab);
     };
     const onSubmit = (data: { name: string; matcher: string }) => {
-        sdk.client.fetch(`/admin/rbac/permissions`, {
+        sdk.client.fetch<{ ok: boolean; message?: string }>(`/admin/rbac/permissions`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -510,16 +508,15 @@ const CreatePermissionModal: React.FC<{ reloadTable: () => void }> = ({ reloadTa
             }),
         })
             .then(async (response) => {
-                if ((response as Response).ok) {
+                if (response.ok) {
                     toast.info("Permission", {
                         description: "New permission has been created",
                     });
                     reloadTable();
                     setIsOpen(false);
                 } else {
-                    const error = await (response as Response).json();
                     toast.error("Permission", {
-                        description: `New permission cannot be created. ${error.message}`,
+                        description: `New permission cannot be created. ${response.message}`,
                     });
                 }
             })
@@ -694,9 +691,8 @@ export const PermissionsCustomArea = () => {
         if (!isLoading) {
             return;
         }
-        sdk.client.fetch(`/admin/rbac/permissions?${params.toString()}`, {
+        sdk.client.fetch<RbacPermission[]>(`/admin/rbac/permissions?${params.toString()}`, {
         })
-            .then((res) => (res as Response).json())
             .then((permissions2) => {
                 setPermissions(permissions2);
                 setLoading(false);
@@ -709,9 +705,8 @@ export const PermissionsCustomArea = () => {
         if (!isLoadingCategories) {
             return;
         }
-        sdk.client.fetch(`/admin/rbac/categories?${params.toString()}`, {
+        sdk.client.fetch<RbacPermissionCategory[]>(`/admin/rbac/categories?${params.toString()}`, {
         })
-            .then((res) => (res as Response).json())
             .then((categories2) => {
                 setCategories(categories2);
                 setLoadingCategories(false);

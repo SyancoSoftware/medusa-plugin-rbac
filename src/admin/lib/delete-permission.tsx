@@ -14,7 +14,7 @@ export const DeletePermission: React.FC<{
     reloadTable: () => void;
   }> = ({ permissionId, reloadTable }) => {
     const handleAction = () => {
-      sdk.client.fetch(`/admin/rbac/permissions`, {
+      sdk.client.fetch<{ message?: string }>(`/admin/rbac/permissions`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -23,7 +23,6 @@ export const DeletePermission: React.FC<{
           id: permissionId,
         }),
       })
-        .then((res) => (res as Response).json() as Promise<{ message?: string }>)
         .then(({ message }) => {
           reloadTable();
           if (message) {

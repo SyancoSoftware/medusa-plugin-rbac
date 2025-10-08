@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 import { LoadingSpinner } from "./loading-spinner";
 import {
   RbacPermission,
-  RbacRole,
   MemberWithRole,
   RoleWithUsers,
   PermissionType,
@@ -21,9 +20,8 @@ export const DashboardMembersCard: React.FC = () => {
     if (!isLoading) {
       return;
     }
-    sdk.client.fetch(`/admin/rbac/members`, {
+    sdk.client.fetch<MemberWithRole[]>(`/admin/rbac/members`, {
     })
-      .then((res) => (res as Response).json() as Promise<MemberWithRole[]>)
       .then((result) => {
         setMembers(result);
         setLoading(false);
@@ -86,9 +84,8 @@ export const DashboardRolesCard = () => {
     if (!isLoading) {
       return;
     }
-    sdk.client.fetch(`/admin/rbac/roles`, {
+    sdk.client.fetch<RoleWithUsers[]>(`/admin/rbac/roles`, {
     })
-      .then((res) => (res as Response).json() as Promise<RoleWithUsers[]>)
       .then((roles2) => {
         setRoles(roles2);
         setLoading(false);
@@ -196,9 +193,8 @@ export const DashboardAssignedRolesCard: React.FC = () => {
     if (!isLoading) {
       return;
     }
-    sdk.client.fetch(`/admin/rbac/roles`, {
+    sdk.client.fetch<RoleWithUsers[]>(`/admin/rbac/roles`, {
     })
-      .then((res) => (res as Response).json() as Promise<RbacRole[]>)
       .then((roles2) => {
         const sorted = roles2
           .slice()
@@ -233,9 +229,8 @@ export const DashboardPermissionsCard: React.FC = () => {
     if (!isLoading) {
       return;
     }
-    sdk.client.fetch(`/admin/rbac/permissions`, {
+    sdk.client.fetch<RbacPermission[]>(`/admin/rbac/permissions`, {
     })
-      .then((res) => (res as Response).json() as Promise<RbacPermission[]>)
       .then((result) => {
         setPermissions(result);
         setLoading(false);

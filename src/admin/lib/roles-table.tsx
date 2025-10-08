@@ -322,9 +322,8 @@ const AvailableRolesList: React.FC<{
         if (!isLoading) {
             return;
         }
-        sdk.client.fetch(`/admin/rbac/roles`, {
+        sdk.client.fetch<RbacRole[]>(`/admin/rbac/roles`, {
         })
-            .then((res) => (res as Response).json() as Promise<RbacRole[]>)
             .then((roles2) => {
                 setRoles(roles2);
                 setLoading(false);
@@ -511,9 +510,8 @@ const CreateRoleModal: React.FC<{ reloadTable: () => void }> = ({ reloadTable })
         if (!isLoading) {
             return;
         }
-        sdk.client.fetch(`/admin/rbac/permissions`, {
+        sdk.client.fetch<RbacPermission[]>(`/admin/rbac/permissions`, {
         })
-            .then((res) => (res as Response).json() as Promise<RbacPermission[]>)
             .then((permissions) => {
                 const initialPolicies = permissions.map((perm): Omit<RbacPolicy, 'id'> => {
                     return {
@@ -539,7 +537,7 @@ const CreateRoleModal: React.FC<{ reloadTable: () => void }> = ({ reloadTable })
         return partialFormValidation(tab);
     };
     const onSubmit = (data: { name: string }) => {
-        sdk.client.fetch(`/admin/rbac/roles`, {
+        sdk.client.fetch<{ message?: string }>(`/admin/rbac/roles`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -549,7 +547,6 @@ const CreateRoleModal: React.FC<{ reloadTable: () => void }> = ({ reloadTable })
                 policies,
             }),
         })
-            .then((res) => (res as Response).json() as Promise<{ message?: string }>)
             .then(({ message }) => {
                 toast.info("Role", {
                     description: "New role has been created",
@@ -701,7 +698,7 @@ const CreateRoleModal: React.FC<{ reloadTable: () => void }> = ({ reloadTable })
 };
 const DeleteRole: React.FC<{ roleId: string; setLoading: (loading: boolean) => void }> = ({ roleId, setLoading }) => {
     const handleAction = () => {
-        sdk.client.fetch(`/admin/rbac/roles`, {
+        sdk.client.fetch<{ message?: string }>(`/admin/rbac/roles`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -710,7 +707,6 @@ const DeleteRole: React.FC<{ roleId: string; setLoading: (loading: boolean) => v
                 id: roleId,
             }),
         })
-            .then((res) => (res as Response).json())
             .then(({ message }) => {
                 setLoading(true);
                 if (message) {
@@ -761,9 +757,8 @@ function RolesTable$() {
         if (!isLoading) {
             return;
         }
-        sdk.client.fetch(`/admin/rbac/roles`, {
+        sdk.client.fetch<RbacRole[]>(`/admin/rbac/roles`, {
         })
-            .then((res) => (res as Response).json() as Promise<RbacRole[]>)
             .then((roles2) => {
                 setRoles(roles2);
                 setLoading(false);

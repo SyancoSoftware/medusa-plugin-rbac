@@ -28,9 +28,8 @@ export const PermissionsPredefinedArea = () => {
         if (!isLoading) {
             return;
         }
-        sdk.client.fetch(`/admin/rbac/permissions?${params.toString()}`, {
+        sdk.client.fetch<RbacPermission[]>(`/admin/rbac/permissions?${params.toString()}`, {
         })
-            .then((res) => (res as Response).json())
             .then((permissions2) => {
                 setPermissions(permissions2);
                 setLoading(false);
@@ -43,9 +42,8 @@ export const PermissionsPredefinedArea = () => {
         if (!isLoading) {
             return;
         }
-        sdk.client.fetch(`/admin/rbac/categories?${params.toString()}`, {
+        sdk.client.fetch<RbacPermissionCategory[]>(`/admin/rbac/categories?${params.toString()}`, {
         })
-            .then((res) => (res as Response).json())
             .then((categories2) => {
                 setCategories(categories2);
                 setLoading(false);

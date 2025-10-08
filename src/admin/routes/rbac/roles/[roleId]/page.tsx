@@ -105,14 +105,13 @@ const DrawerEditRoleGeneral: React.FC<{
   }> = ({ rbacRole, reloadTable }) => {
     const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
     function updateRole(role: RbacRole) {
-      sdk.client.fetch(`/admin/rbac/roles/${rbacRole.id}`, {
+      sdk.client.fetch<{ message: string }>(`/admin/rbac/roles/${rbacRole.id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(role),
       })
-        .then((res) => (res as Response).json())
         .then(({ message }) => {
           reloadTable();
           setDrawerIsOpen(false);
@@ -481,8 +480,7 @@ const DrawerEditRoleGeneral: React.FC<{
       if (!isLoading) {
         return;
       }
-      sdk.client.fetch(`/admin/rbac/roles/${roleId}`)
-        .then((res) => (res as Response).json())
+      sdk.client.fetch<{ role: RoleWithUsers; users: ApiUser[] }>(`/admin/rbac/roles/${roleId}`)
         .then((result) => {
           setRole({
             ...result.role,
