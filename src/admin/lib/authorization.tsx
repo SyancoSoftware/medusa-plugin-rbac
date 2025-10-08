@@ -58,10 +58,7 @@ export const TestMyAuthorization: React.FC<{ urlToTest: string }> = ({
     }
     sdk.client.fetch(`/admin/rbac/check`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: urlToTest,
+      body: { urlToTest },
     })
       .then((responseJson) => {
         if (isAuthorizationCheckResult(responseJson)) {

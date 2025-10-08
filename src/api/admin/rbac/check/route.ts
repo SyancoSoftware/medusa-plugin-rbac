@@ -2,8 +2,10 @@ import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
 
 import { RBAC_MODULE } from "./../../../../modules/rbac";
 import { PermissionMatcherType } from "./../../../..//modules/rbac/types";
+import { MedusaRequest, MedusaResponse, Query } from "@medusajs/framework";
+import RbacModuleService from "../../../../modules/rbac/service";
 
-export const POST = async (req: any, res: any) => {
+export const POST = async (req: MedusaRequest<{ urlToTest: string }>, res: MedusaResponse) => {
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
   const {
     data: rolesWithUsers,
@@ -20,7 +22,7 @@ export const POST = async (req: any, res: any) => {
     );
 
     if (existingRole) {
-      const rbacModuleService = req.scope.resolve(RBAC_MODULE);
+      const rbacModuleService: RbacModuleService = req.scope.resolve(RBAC_MODULE);
       const authorizationResponse = {
         ...(await rbacModuleService.testAuthorization(
           existingRole,

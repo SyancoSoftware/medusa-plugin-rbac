@@ -147,9 +147,6 @@ function MembersTableComponent() {
   const assignRole = (roleId: string, userId: string) => {
     sdk.client.fetch<{ message?: string }>(`/admin/rbac/members/assignments`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: {
         userId,
         roleId,

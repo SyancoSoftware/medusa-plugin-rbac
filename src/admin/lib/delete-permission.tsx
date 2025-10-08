@@ -16,9 +16,6 @@ export const DeletePermission: React.FC<{
     const handleAction = () => {
       sdk.client.fetch<{ message?: string }>(`/admin/rbac/permissions`, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: {
           id: permissionId,
         },

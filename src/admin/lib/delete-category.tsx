@@ -8,9 +8,6 @@ export const DeleteCategory: React.FC<{ category: RbacPermissionCategory; reload
     const handleAction = () => {
         sdk.client.fetch<{ message: string }>(`/admin/rbac/categories`, {
             method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
             body: {
                 id: category.id,
             },

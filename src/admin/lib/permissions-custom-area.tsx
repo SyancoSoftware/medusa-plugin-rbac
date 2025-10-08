@@ -223,9 +223,6 @@ const DrawerCreateCategory: React.FC<{ reload: () => void }> = ({ reload }) => {
     const onSubmit = () => {
         sdk.client.fetch<{ ok: boolean; message?: string }>(`/admin/rbac/categories`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
             body: {
                 name: categoryName,
             },
@@ -495,9 +492,6 @@ const CreatePermissionModal: React.FC<{ reloadTable: () => void }> = ({ reloadTa
     const onSubmit = (data: { name: string; matcher: string }) => {
         sdk.client.fetch<{ ok: boolean; message?: string }>(`/admin/rbac/permissions`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
             body: {
                 name: data.name,
                 type: PermissionType.CUSTOM,

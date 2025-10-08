@@ -107,9 +107,6 @@ const DrawerEditRoleGeneral: React.FC<{
     function updateRole(role: RbacRole) {
       sdk.client.fetch<{ message: string }>(`/admin/rbac/roles/${rbacRole.id}`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: role,
       })
         .then(({ message }) => {

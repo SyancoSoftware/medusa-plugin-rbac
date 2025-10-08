@@ -539,9 +539,6 @@ const CreateRoleModal: React.FC<{ reloadTable: () => void }> = ({ reloadTable })
     const onSubmit = (data: { name: string }) => {
         sdk.client.fetch<{ message?: string }>(`/admin/rbac/roles`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
             body: {
                 name: data.name,
                 policies,
@@ -700,9 +697,6 @@ const DeleteRole: React.FC<{ roleId: string; setLoading: (loading: boolean) => v
     const handleAction = () => {
         sdk.client.fetch<{ message?: string }>(`/admin/rbac/roles`, {
             method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
             body: {
                 id: roleId,
             },

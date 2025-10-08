@@ -100,9 +100,6 @@ const RbacPermissionGeneral: React.FC<{
     function updatePermission(permission: RbacPermission) {
         sdk.client.fetch<{ message: string }>(`/admin/rbac/permissions/${permission.id}`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
             body: permission,
         })
             .then(({ message }) => {

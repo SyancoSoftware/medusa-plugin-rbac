@@ -19,22 +19,23 @@ export const RbacAuthorizationCheck: React.FC<{ children: React.ReactNode }> = (
     if (!isLoading) {
       return;
     }
-    sdk.client.fetch<AuthorizationCheckResult>(`/admin/rbac/check`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: {
-        urlToTest: `/admin/rbac`,
-      },
-    })
-      .then((responseJson) => {
-        setAuthorizationResult(responseJson);
-        setLoading(false);
-      })
-      .catch((error) => {
+    (async () => {
+      try {
+
+        const response = await sdk.client.fetch<AuthorizationCheckResult>(`/admin/rbac/check`, {
+          method: "POST",
+          body: {
+            urlToTest: `/admin/rbac`,
+          },
+        })
+        setAuthorizationResult(response);
+      } catch (error) {
         console.error(error);
-      });
+      } finally {
+        setLoading(false);
+      }
+
+    })()
   }, [isLoading]);
   if (isLoading) {
     return <LoadingSpinner size={12} />;
