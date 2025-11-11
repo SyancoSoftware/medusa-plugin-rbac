@@ -48,7 +48,7 @@ const PermissionsPage = () => {
 };
 
 export const config = defineRouteConfig({
-  label: "Permissions",
+  label: "Permisos",
 });
 
 export default PermissionsPage;

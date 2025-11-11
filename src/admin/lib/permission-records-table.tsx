@@ -122,6 +122,15 @@ const PermissionRecordsTableInner: React.FC<{
         canNextPage={canNextPage}
         previousPage={previousPage}
         nextPage={nextPage}
+        translations={
+          {
+            results: "resultados",
+            "of": "de",
+            pages: "páginas",
+            prev: "Anterior",
+            next: "Siguiente"
+          }
+        }
       />
     </div>
   );

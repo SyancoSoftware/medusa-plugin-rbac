@@ -117,7 +117,7 @@ export const DashboardRolesCard = () => {
                   (role) => role.users !== undefined && role.users.length > 0,
                 ).length
               }{" "}
-              used
+              utilizados
             </Text>
           )}
         </Grid>
@@ -130,7 +130,7 @@ export const DashboardRolesCard = () => {
                   (role) => role.users === undefined || role.users.length === 0,
                 ).length
               }{" "}
-              not used
+              sin utilizar
             </Text>
           )}
         </Grid>

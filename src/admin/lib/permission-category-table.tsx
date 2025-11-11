@@ -1,5 +1,6 @@
 import {
-    Table} from "@medusajs/ui";
+    Table
+} from "@medusajs/ui";
 import React, { useState, useMemo } from "react";
 import { Grid } from "./grid";
 import { RbacPermissionCategory, PermissionType } from "./types";
@@ -79,6 +80,15 @@ const PermissionCategoryTable$: React.FC<{
                     canNextPage={canNextPage}
                     previousPage={previousPage}
                     nextPage={nextPage}
+                    translations={
+                        {
+                            results: "resultados",
+                            "of": "de",
+                            pages: "páginas",
+                            prev: "Anterior",
+                            next: "Siguiente"
+                        }
+                    }
                 />
             </div>
         );
