@@ -1,6 +1,6 @@
 {
   "name": "@syancosoftware/medusa-plugin-rbac",
-  "version": "2.0.8-es",
+  "version": "2.0.9-es",
   "description": "The RBAC functionality for MedusaJS",
   "author": "Syanco Software",
   "files": [

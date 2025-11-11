@@ -717,7 +717,7 @@ export const PermissionsCustomArea = () => {
         <Grid container direction="column" rowSpacing={3}>
             <Grid>
                 <Header
-                    title={`Custom`}
+                    title={`Personalizado`}
                     actions={[
                         {
                             type: "custom",

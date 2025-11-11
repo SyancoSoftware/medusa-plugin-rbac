@@ -60,7 +60,7 @@ export const PermissionsPredefinedArea = () => {
         <Grid container direction="column" rowSpacing={3}>
             <Grid>
                 <Header
-                    title={`Predefined`}
+                    title={`Predefinido`}
                     actions={[
                         {
                             type: "custom",
