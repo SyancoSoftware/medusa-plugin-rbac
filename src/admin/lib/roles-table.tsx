@@ -31,7 +31,7 @@ const EditRoleStep: React.FC<{ register: any; errors: any }> = ({ register, erro
                                 </Grid>
                                 <Grid>
                                     <Input
-                                        placeholder="Store administrator"
+                                        placeholder="Administrador"
                                         {...register("name", {
                                             validateName,
                                         })}
@@ -272,7 +272,7 @@ const PrimaryButton: React.FC<{
     handleSubmit: () => void;
 }> = ({ tab, next, isLoading, handleSubmit }) => {
     if (tab === "general") {
-        return <Button onClick={() => next(tab)}>Continue</Button>;
+        return <Button onClick={() => next(tab)}>Continuar</Button>;
     }
     return (
         <Button type="submit" isLoading={isLoading} onClick={handleSubmit}>

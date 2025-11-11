@@ -31,11 +31,11 @@ const PrimaryButton$1: React.FC<{
     handleSubmit: () => void;
 }> = ({ tab, next, isLoading, handleSubmit }) => {
     if (tab === "general") {
-        return <Button onClick={() => next(tab)}>Continue</Button>;
+        return <Button onClick={() => next(tab)}>Continuar</Button>;
     }
     return (
         <Button type="submit" isLoading={isLoading} onClick={handleSubmit}>
-            Create
+            Crear
         </Button>
     );
 };
@@ -100,7 +100,7 @@ const SelectMatcherType: React.FC<{
                         {matcherTypes &&
                             matcherTypes.map((item) => (
                                 <Select.Item value={item}>
-                                    {`${item}`}
+                                    {`${item}`}{" "}
                                     {item}
                                 </Select.Item>
                             ))}
@@ -249,7 +249,7 @@ const DrawerCreateCategory: React.FC<{ reload: () => void }> = ({ reload }) => {
     return (
         <Drawer open={drawerIsOpen} onOpenChange={setDrawerIsOpen}>
             <Drawer.Trigger asChild>
-                <Button variant="secondary">{`Create`}</Button>
+                <Button variant="secondary">{`Crear`}</Button>
             </Drawer.Trigger>
             <Drawer.Content>
                 <Drawer.Header>
@@ -378,7 +378,7 @@ const CreatePermissionGeneralStep: React.FC<{
                                     </Grid>
                                     <Grid>
                                         <Input
-                                            placeholder="Reading products"
+                                            placeholder="Listar articulos"
                                             {...register("name", {
                                                 validateName: validateName,
                                             })}

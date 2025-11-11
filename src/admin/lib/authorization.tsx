@@ -23,13 +23,13 @@ const isAuthorizationCheckResult = (
 function getActionMessage(actionType: PermissionActionType) {
   switch (actionType) {
     case PermissionActionType.READ:
-      return `read, so you cannot view the content`;
+      return `Listar o ver, para que sea posible ver el contenido`;
     case PermissionActionType.WRITE:
-      return `write, so you are not able to create the content`;
+      return `Crear o modificar, para que sea posible crear o modificar el contenido`;
     case PermissionActionType.DELETE:
-      return `delete, so you are not able to delete the content`;
+      return `Eliminar, para que sea posible eliminar el contenido`;
     default:
-      return "unknown action";
+      return "Accion desconocida";
   }
 }
 
