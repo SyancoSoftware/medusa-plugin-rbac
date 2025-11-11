@@ -12,17 +12,17 @@ import createPermissionsWorkflow from "../workflows/create-permissions";
 
 const PREDEFINED_CATEGORIES = [
   {
-    name: "Orders",
+    name: "Pedidos",
     type: PermissionCategoryType.PREDEFINED,
     permissions: [],
   },
   {
-    name: "Products",
+    name: "Productos",
     type: PermissionCategoryType.PREDEFINED,
     permissions: [],
   },
   {
-    name: "Customers",
+    name: "Clientes",
     type: PermissionCategoryType.PREDEFINED,
     permissions: [],
   },
@@ -30,7 +30,7 @@ const PREDEFINED_CATEGORIES = [
 
 const PREDEFINED_PERMISSIONS_ORDERS = [
   {
-    name: "READ Orders",
+    name: "Listar pedidos",
     type: PermissionType.PREDEFINED,
     matcherType: PermissionMatcherType.API,
     matcher: "/admin/orders",
@@ -38,7 +38,7 @@ const PREDEFINED_PERMISSIONS_ORDERS = [
     policies: [],
   },
   {
-    name: "WRITE Orders",
+    name: "Modificar/Crear pedidos",
     type: PermissionType.PREDEFINED,
     matcherType: PermissionMatcherType.API,
     matcher: "/admin/orders",
@@ -46,7 +46,7 @@ const PREDEFINED_PERMISSIONS_ORDERS = [
     policies: [],
   },
   {
-    name: "DELETE Orders",
+    name: "Eliminar pedidos",
     type: PermissionType.PREDEFINED,
     matcherType: PermissionMatcherType.API,
     matcher: "/admin/orders",
@@ -57,7 +57,7 @@ const PREDEFINED_PERMISSIONS_ORDERS = [
 
 const PREDEFINED_PERMISSIONS_PRODUCTS = [
   {
-    name: "READ Products",
+    name: "Listar productos",
     type: PermissionType.PREDEFINED,
     matcherType: PermissionMatcherType.API,
     matcher: "/admin/products",
@@ -65,7 +65,7 @@ const PREDEFINED_PERMISSIONS_PRODUCTS = [
     policies: [],
   },
   {
-    name: "WRITE Products",
+    name: "Crear/Modificar productos",
     type: PermissionType.PREDEFINED,
     matcherType: PermissionMatcherType.API,
     matcher: "/admin/products",
@@ -73,7 +73,7 @@ const PREDEFINED_PERMISSIONS_PRODUCTS = [
     policies: [],
   },
   {
-    name: "DELETE Products",
+    name: "Eliminar productos",
     type: PermissionType.PREDEFINED,
     matcherType: PermissionMatcherType.API,
     matcher: "/admin/products",
@@ -84,7 +84,7 @@ const PREDEFINED_PERMISSIONS_PRODUCTS = [
 
 const PREDEFINED_PERMISSIONS_CUSTOMERS = [
   {
-    name: "READ Customers",
+    name: "Listar clientes",
     type: PermissionType.PREDEFINED,
     matcherType: PermissionMatcherType.API,
     matcher: "/admin/customers",
@@ -92,7 +92,7 @@ const PREDEFINED_PERMISSIONS_CUSTOMERS = [
     policies: [],
   },
   {
-    name: "WRITE Customers",
+    name: "Crear/Modificar clientes",
     type: PermissionType.PREDEFINED,
     matcherType: PermissionMatcherType.API,
     matcher: "/admin/customers",
@@ -100,7 +100,7 @@ const PREDEFINED_PERMISSIONS_CUSTOMERS = [
     policies: [],
   },
   {
-    name: "DELETE Customers",
+    name: "Eliminar clientes",
     type: PermissionType.PREDEFINED,
     matcherType: PermissionMatcherType.API,
     matcher: "/admin/customers",
@@ -122,7 +122,7 @@ export default async function seedRbacData({
     ContainerRegistrationKeys.LOGGER
   );
 
-  logger.info("Start seeding rbac permissions");
+  logger.info("Comienza a asignar permisos rbac");
 
   await createPermissionCategoryWorkflow(container).run({
     input: {  
@@ -161,5 +161,5 @@ export default async function seedRbacData({
     },
   });
 
-  logger.info("Finished seeding rbac permissions");
+  logger.info("Finalizada la configuración de los permisos rbac");
 }
