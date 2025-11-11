@@ -29,7 +29,7 @@ const PermissionsPage = () => {
       <RbacAuthorizationCheck>
         <Grid container direction="column" rowSpacing={3}>
           <Grid>
-            <Heading level="h1">Permissions</Heading>
+            <Heading level="h1">Permisos</Heading>
           </Grid>
           <Grid>
             <Container style={{ marginTop: 15 }}>

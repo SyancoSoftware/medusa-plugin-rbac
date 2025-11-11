@@ -43,7 +43,7 @@ export const RbacAuthorizationCheck: React.FC<{ children: React.ReactNode }> = (
   if (authorizationResult && authorizationResult.denied.length > 0) {
     return (
       <Grid container justifyContent="center">
-        <Alert variant="error">You are unauthorized to manage RBAC</Alert>
+        <Alert variant="error">No está autorizado para administrar RBAC</Alert>
       </Grid>
     );
   }

@@ -59,7 +59,7 @@ const SelectActionType: React.FC<{
             <div className="w-[256px]">
                 <Select onValueChange={handleChange} value={value}>
                     <Select.Trigger>
-                        <Select.Value placeholder="Select an action type" />
+                        <Select.Value placeholder="Seleccionar un tipo de accion" />
                     </Select.Trigger>
                     <Select.Content>
                         {actionTypes &&
@@ -94,7 +94,7 @@ const SelectMatcherType: React.FC<{
             <div className="w-[256px]">
                 <Select onValueChange={handleChange} value={value}>
                     <Select.Trigger>
-                        <Select.Value placeholder="Select a matcher type" />
+                        <Select.Value placeholder="Seleccione un tipo de coincidencia" />
                     </Select.Trigger>
                     <Select.Content>
                         {matcherTypes &&
@@ -117,7 +117,7 @@ const InputMatcher: React.FC<{ register: any; errors: any }> = ({ register, erro
                 <Grid>
                     <Grid container direction="column" spacing={1}>
                         <Grid>
-                            <Label size="small">Matcher</Label>
+                            <Label size="small">Comparador</Label>
                         </Grid>
                         <Grid>
                             <Input
@@ -158,10 +158,10 @@ const CreatePermissionConfigurationStep: React.FC<{
                 <Grid size={4}>
                     <Grid container direction="column" spacing={1} marginTop={2}>
                         <Grid>
-                            <Heading level="h1">Configure permission</Heading>
+                            <Heading level="h1">Configurar permisos</Heading>
                         </Grid>
                         <Grid>
-                            <Label size="small">Choose matcher type</Label>
+                            <Label size="small">Seleccione un tipo de coincidencia</Label>
                         </Grid>
                         <Grid>
                             <SelectMatcherType
@@ -171,7 +171,7 @@ const CreatePermissionConfigurationStep: React.FC<{
                             />
                         </Grid>
                         <Grid>
-                            <Label size="small">Choose action type</Label>
+                            <Label size="small">Seleccione el tipo de acción</Label>
                         </Grid>
                         <Grid>
                             <SelectActionType
@@ -230,18 +230,18 @@ const DrawerCreateCategory: React.FC<{ reload: () => void }> = ({ reload }) => {
             .then(async (response) => {
                 if (response.ok) {
                     reload();
-                    toast.info("New category has been created", {
-                        description: "You can now select it from the list.",
+                    toast.info("Se ha creado una nueva categoría.", {
+                        description: "Ahora puedes seleccionarlo de la lista.",
                     });
                 } else {
                     toast.error("Error", {
-                        description: `New category cannot be created. ${response.message}`,
+                        description: `No se puede crear una nueva categoría.. ${response.message}`,
                     });
                 }
             })
             .catch((e) => {
                 toast.error("Error", {
-                    description: `New category cannot be created. ${e.toString()}`,
+                    description: `No se puede crear una nueva categoría.. ${e.toString()}`,
                 });
                 console.error(e);
             });
@@ -253,12 +253,12 @@ const DrawerCreateCategory: React.FC<{ reload: () => void }> = ({ reload }) => {
             </Drawer.Trigger>
             <Drawer.Content>
                 <Drawer.Header>
-                    <Drawer.Title>New category</Drawer.Title>
+                    <Drawer.Title>Nueva categoria</Drawer.Title>
                 </Drawer.Header>
                 <Drawer.Body>
                     <Grid container direction="column" columnSpacing={10} rowSpacing={3}>
                         <Grid>
-                            <Label>Name</Label>
+                            <Label>Nombre</Label>
                         </Grid>
                         <Grid>
                             <InputCreateCategory setCategory={setCategoryName} />
@@ -267,7 +267,7 @@ const DrawerCreateCategory: React.FC<{ reload: () => void }> = ({ reload }) => {
                 </Drawer.Body>
                 <Drawer.Footer>
                     <Drawer.Close asChild>
-                        <Button variant="secondary">Cancel</Button>
+                        <Button variant="secondary">Cancelar</Button>
                     </Drawer.Close>
                     <Button
                         onClick={() => {
@@ -276,7 +276,7 @@ const DrawerCreateCategory: React.FC<{ reload: () => void }> = ({ reload }) => {
                             setDrawerIsOpen(false);
                         }}
                     >
-                        Save
+                        Guardar
                     </Button>
                 </Drawer.Footer>
             </Drawer.Content>
@@ -320,13 +320,13 @@ const SelectCategory: React.FC<{
             <Grid>
                 <Select onValueChange={handleChange} value={value ? value.id : "None"}>
                     <Select.Trigger>
-                        <Select.Value placeholder="Select a category" />
+                        <Select.Value placeholder="Seleccionar categoria" />
                     </Select.Trigger>
                     {isLoading && <LoadingSpinner />}
                     {!isLoading && (
                         <Select.Content>
                             <Select.Item value="None" key="None">
-                                None
+                                Ninguna
                             </Select.Item>
                             <Select.Separator />
                             {categories &&
@@ -340,7 +340,7 @@ const SelectCategory: React.FC<{
                 </Select>
             </Grid>
             <Grid>
-                <Label size="small">You can create new category</Label>
+                <Label size="small">Puedes crear una nueva categoría</Label>
             </Grid>
             <Grid>
                 <DrawerCreateCategory reload={() => setLoading(true)} />
@@ -365,16 +365,16 @@ const CreatePermissionGeneralStep: React.FC<{
                 <Grid size={4}>
                     <Grid container direction="column" spacing={1} marginTop={2}>
                         <Grid>
-                            <Heading level="h1">Create permission</Heading>
+                            <Heading level="h1">Crear permiso</Heading>
                         </Grid>
                         <Grid>
-                            <Text>Set a name which will describe permission</Text>
+                            <Text>Asigna un nombre que describa el permiso.</Text>
                         </Grid>
                         <Grid container>
                             <Grid>
                                 <Grid container direction="column" spacing={1} marginTop={2}>
                                     <Grid marginTop={4}>
-                                        <Label size="small">Name</Label>
+                                        <Label size="small">Nombre</Label>
                                     </Grid>
                                     <Grid>
                                         <Input
@@ -395,7 +395,7 @@ const CreatePermissionGeneralStep: React.FC<{
                             <Grid>
                                 <Grid container direction="column" spacing={1}>
                                     <Grid marginTop={4}>
-                                        <Label size="small">Category (optional)</Label>
+                                        <Label size="small">Categoria (opcional)</Label>
                                     </Grid>
                                     <Grid>
                                         <SelectCategory
@@ -447,7 +447,7 @@ const CreatePermissionModal: React.FC<{ reloadTable: () => void }> = ({ reloadTa
                 } else {
                     setError("name", {
                         type: "custom",
-                        message: "Please fill the name",
+                        message: "Por favor, escriba el nombre",
                     });
                     result = false;
                 }
@@ -458,7 +458,7 @@ const CreatePermissionModal: React.FC<{ reloadTable: () => void }> = ({ reloadTa
                 } else {
                     setError("matcher", {
                         type: "custom",
-                        message: "Please fill the matcher",
+                        message: "Por favor, seleccione el comparador",
                     });
                     result = false;
                 }
@@ -503,20 +503,20 @@ const CreatePermissionModal: React.FC<{ reloadTable: () => void }> = ({ reloadTa
         })
             .then(async (response) => {
                 if (response.ok) {
-                    toast.info("Permission", {
-                        description: "New permission has been created",
+                    toast.info("Permiso", {
+                        description: "Se ha creado un nuevo permiso.",
                     });
                     reloadTable();
                     setIsOpen(false);
                 } else {
-                    toast.error("Permission", {
-                        description: `New permission cannot be created. ${response.message}`,
+                    toast.error("Permiso", {
+                        description: `No se pudo crear el nuevo permiso. ${response.message}`,
                     });
                 }
             })
             .catch((e) => {
-                toast.error("Permission", {
-                    description: `New permission cannot be created. ${e.toString()}`,
+                toast.error("Permiso", {
+                    description: `No se pudo crear el nuevo permiso. ${e.toString()}`,
                 });
                 console.error(e);
             });
@@ -582,7 +582,7 @@ const CreatePermissionModal: React.FC<{ reloadTable: () => void }> = ({ reloadTa
     return (
         <FocusModal open={isOpen} onOpenChange={setIsOpen}>
             <FocusModal.Trigger>
-                <Button variant="secondary">Create</Button>
+                <Button variant="secondary">Crear</Button>
             </FocusModal.Trigger>
             <form>
                 <FocusModal.Content>
@@ -605,7 +605,7 @@ const CreatePermissionModal: React.FC<{ reloadTable: () => void }> = ({ reloadTa
                                             value="configuration"
                                             status={tabState.configuration as "not-started" | "in-progress" | "completed"}
                                         >
-                                            Configuration
+                                            Configuracion
                                         </ProgressTabs.Trigger>
                                     </ProgressTabs.List>
                                 </div>
@@ -643,7 +643,7 @@ const CreatePermissionModal: React.FC<{ reloadTable: () => void }> = ({ reloadTa
                                     <Grid container columnSpacing={2} rowSpacing={5}>
                                         <Grid>
                                             <FocusModal.Close>
-                                                <Button variant="secondary">Cancel</Button>
+                                                <Button variant="secondary">Cancelar</Button>
                                             </FocusModal.Close>
                                         </Grid>
                                         <Grid>
@@ -726,8 +726,8 @@ export const PermissionsCustomArea = () => {
                                     <Grid>
                                         <Text>
                                             {viewType === "category"
-                                                ? "Category view"
-                                                : "Permission view"}
+                                                ? "Vista de categoria"
+                                                : "Vista de permiso"}
                                         </Text>
                                     </Grid>
                                     <Grid>

@@ -44,10 +44,10 @@ const PermissionRecordsTableInner: React.FC<{
       <Table>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>Target</Table.HeaderCell>
-            <Table.HeaderCell>Action</Table.HeaderCell>
-            <Table.HeaderCell>Type</Table.HeaderCell>
-            <Table.HeaderCell>Name</Table.HeaderCell>
+            <Table.HeaderCell>Objetivo</Table.HeaderCell>
+            <Table.HeaderCell>Accion</Table.HeaderCell>
+            <Table.HeaderCell>Tipo</Table.HeaderCell>
+            <Table.HeaderCell>Nombre</Table.HeaderCell>
             {permissionType === PermissionType.CUSTOM && <Table.HeaderCell />}
           </Table.Row>
         </Table.Header>

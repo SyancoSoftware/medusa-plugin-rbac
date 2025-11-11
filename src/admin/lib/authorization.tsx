@@ -80,7 +80,7 @@ export const TestMyAuthorization: React.FC<{ urlToTest: string }> = ({
         authorizationResult.denied.length > 0 && (
           <Container>
             <Alert variant="error">
-              {`You are unauthorized to:`}
+              {`No estás autorizado para:`}
               <ActionsList actionTypes={authorizationResult.denied} />
             </Alert>
           </Container>

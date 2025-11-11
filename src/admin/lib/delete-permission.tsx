@@ -40,14 +40,14 @@ export const DeletePermission: React.FC<{
         </Prompt.Trigger>
         <Prompt.Content>
           <Prompt.Header>
-            <Prompt.Title>Delete role</Prompt.Title>
+            <Prompt.Title>Eliminar rol</Prompt.Title>
             <Prompt.Description>
-              Are you sure? This cannot be undone.
+              ¿Estas seguro? Esta accion no se puede deshacer.
             </Prompt.Description>
           </Prompt.Header>
           <Prompt.Footer>
             <Prompt.Cancel onClick={(e) => e.stopPropagation()}>
-              Cancel
+              Cancelar
             </Prompt.Cancel>
             <Prompt.Action
               onClick={(e) => {
@@ -55,7 +55,7 @@ export const DeletePermission: React.FC<{
                 handleAction();
               }}
             >
-              Delete
+              Eliminar
             </Prompt.Action>
           </Prompt.Footer>
         </Prompt.Content>

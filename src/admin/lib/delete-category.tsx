@@ -33,23 +33,23 @@ export const DeleteCategory: React.FC<{ category: RbacPermissionCategory; reload
             <Prompt.Content>
                 <Prompt.Header>
                     {(category.permissions?.length ?? 0) > 0 && (
-                        <Prompt.Title>Delete category with permissions</Prompt.Title>
+                        <Prompt.Title>Eliminar categoría con permisos</Prompt.Title>
                     )}
                     {(category.permissions?.length ?? 0) === 0 && (
-                        <Prompt.Title>Delete empty category</Prompt.Title>
+                        <Prompt.Title>Eliminar categoría vacía</Prompt.Title>
                     )}
                     {(category.permissions?.length ?? 0) > 0 && (
-                        <Prompt.Description>{`Are you sure? This category contains ${category.permissions?.length ?? 0} permissions - they will be deleted also! This cannot be undone.`}</Prompt.Description>
+                        <Prompt.Description>{`¿Estas seguro? Esta categoria contiene ${category.permissions?.length ?? 0} permisos - ¡Ellos también serán eliminados! Esto no se puede deshacer.`}</Prompt.Description>
                     )}
                     {(category.permissions?.length ?? 0) === 0 && (
                         <Prompt.Description>
-                            Are you sure? This cannot be undone.
+                            ¿Estás seguro? Esto no se puede deshacer.
                         </Prompt.Description>
                     )}
                 </Prompt.Header>
                 <Prompt.Footer>
                     <Prompt.Cancel onClick={(e) => e.stopPropagation()}>
-                        Cancel
+                        Cancelar
                     </Prompt.Cancel>
                     <Prompt.Action
                         onClick={(e) => {
@@ -57,7 +57,7 @@ export const DeleteCategory: React.FC<{ category: RbacPermissionCategory; reload
                             handleAction();
                         }}
                     >
-                        Delete
+                        Eliminar
                     </Prompt.Action>
                 </Prompt.Footer>
             </Prompt.Content>

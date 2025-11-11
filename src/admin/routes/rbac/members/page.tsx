@@ -8,7 +8,7 @@ const MembersPage = () => {
       <RbacAuthorizationCheck>
         <Grid container direction="column" rowSpacing={3}>
           <Grid>
-            <Heading level="h1">Members</Heading>
+            <Heading level="h1">Miembros</Heading>
           </Grid>
           <Grid>
             <Container>
@@ -22,7 +22,7 @@ const MembersPage = () => {
 };
 
 export const config = defineRouteConfig({
-  label: "Members",
+  label: "Miembros",
 });
 
 export default MembersPage;

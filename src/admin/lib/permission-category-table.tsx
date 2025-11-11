@@ -42,8 +42,8 @@ const PermissionCategoryTable$: React.FC<{
                 <Table>
                     <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell>Category</Table.HeaderCell>
-                            <Table.HeaderCell>Permissions</Table.HeaderCell>
+                            <Table.HeaderCell>Categoria</Table.HeaderCell>
+                            <Table.HeaderCell>Permisos</Table.HeaderCell>
                             {permissionType === PermissionType.CUSTOM && <Table.HeaderCell />}
                         </Table.Row>
                     </Table.Header>

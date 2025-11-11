@@ -39,7 +39,7 @@ const DrawerEditPermissionGeneral: React.FC<{
                 setError(undefined);
                 return true;
             }
-            setError("Name cannot be empty");
+            setError("El nombre es obligatorio");
             return false;
         }
         useEffect(() => {
@@ -49,12 +49,12 @@ const DrawerEditPermissionGeneral: React.FC<{
             <Drawer open={drawerIsOpen} onOpenChange={setDrawerIsOpen}>
                 <Drawer.Content>
                     <Drawer.Header>
-                        <Drawer.Title>Edit permission</Drawer.Title>
+                        <Drawer.Title>Editar permiso</Drawer.Title>
                     </Drawer.Header>
                     <Drawer.Body>
                         <Grid container direction="column" rowSpacing={3}>
                             <Grid>
-                                <Label>Name</Label>
+                                <Label>Nombre</Label>
                             </Grid>
                             <Grid>
                                 <Input
@@ -71,7 +71,7 @@ const DrawerEditPermissionGeneral: React.FC<{
                     </Drawer.Body>
                     <Drawer.Footer>
                         <Drawer.Close asChild>
-                            <Button variant="secondary">Cancel</Button>
+                            <Button variant="secondary">Cancelar</Button>
                         </Drawer.Close>
                         <Button
                             disabled={error !== undefined}
@@ -84,7 +84,7 @@ const DrawerEditPermissionGeneral: React.FC<{
                                 }
                             }}
                         >
-                            Update
+                            Actualizar
                         </Button>
                     </Drawer.Footer>
                 </Drawer.Content>
@@ -118,7 +118,7 @@ const RbacPermissionGeneral: React.FC<{
     return (
         <Container className="divide-y">
             <Header
-                title="Overview"
+                title="Vista previa"
                 actions={[
                     {
                         type: "action-menu",
@@ -128,7 +128,7 @@ const RbacPermissionGeneral: React.FC<{
                                     actions: [
                                         {
                                             icon: <Pencil />,
-                                            label: "Edit",
+                                            label: "Editar",
                                             onClick: () => setDrawerIsOpen(true),
                                         },
                                     ],
@@ -144,12 +144,12 @@ const RbacPermissionGeneral: React.FC<{
                 currentPermission={rbacPermission}
                 setPermission={updatePermission}
             />
-            <SectionRow title="Name" value={rbacPermission.name} />
-            <SectionRow title="Type" value={rbacPermission.type} />
-            <SectionRow title="Matcher type" value={rbacPermission.matcherType} />
-            <SectionRow title="Action type" value={rbacPermission.actionType} />
+            <SectionRow title="Nombre" value={rbacPermission.name} />
+            <SectionRow title="Tipo" value={rbacPermission.type} />
+            <SectionRow title="Tipo de coincidencia" value={rbacPermission.matcherType} />
+            <SectionRow title="Tipo de accion" value={rbacPermission.actionType} />
             <SectionRow
-                title="Category"
+                title="Categoria"
                 value={rbacPermission.category ? rbacPermission.category.name : "-"}
             />
         </Container>

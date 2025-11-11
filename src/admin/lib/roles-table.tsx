@@ -18,16 +18,16 @@ const EditRoleStep: React.FC<{ register: any; errors: any }> = ({ register, erro
             <Grid size={4}>
                 <Grid container direction="column" spacing={1} marginTop={2}>
                     <Grid>
-                        <Heading level="h1">Create role</Heading>
+                        <Heading level="h1">Crear rol</Heading>
                     </Grid>
                     <Grid>
-                        <Text>Set a name which will describe what is a role</Text>
+                        <Text>Asigna un nombre que describa qué es un rol.</Text>
                     </Grid>
                     <Grid container>
                         <Grid>
                             <Grid container direction="column" spacing={1} marginTop={2}>
                                 <Grid marginTop={4}>
-                                    <Label size="small">Name</Label>
+                                    <Label size="small">Nombre</Label>
                                 </Grid>
                                 <Grid>
                                     <Input
@@ -102,9 +102,9 @@ const CategoryView: React.FC<{
         <Table>
             <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell>Name</Table.HeaderCell>
-                    <Table.HeaderCell>Permissions</Table.HeaderCell>
-                    <Table.HeaderCell>Allow</Table.HeaderCell>
+                    <Table.HeaderCell>Nombre</Table.HeaderCell>
+                    <Table.HeaderCell>Permisos</Table.HeaderCell>
+                    <Table.HeaderCell>Permitir</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -138,9 +138,9 @@ const PermissionsView: React.FC<{
         <Table>
             <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell>Matcher</Table.HeaderCell>
-                    <Table.HeaderCell>Action type</Table.HeaderCell>
-                    <Table.HeaderCell>Allow</Table.HeaderCell>
+                    <Table.HeaderCell>Comparador</Table.HeaderCell>
+                    <Table.HeaderCell>Tipo de accion</Table.HeaderCell>
+                    <Table.HeaderCell>Permitir</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -230,7 +230,7 @@ const PoliciesTable: React.FC<{
                 </Grid>
                 <Grid>
                     <Text>
-                        {viewType === "category" ? "Category view" : "Permission view"}
+                        {viewType === "category" ? "Vista de categorias" : "Vista de permisos"}
                     </Text>
                 </Grid>
             </Grid>
@@ -276,7 +276,7 @@ const PrimaryButton: React.FC<{
     }
     return (
         <Button type="submit" isLoading={isLoading} onClick={handleSubmit}>
-            Create
+            Crear
         </Button>
     );
 };
@@ -297,7 +297,7 @@ const SelectRole: React.FC<{
         <div className="w-[256px]">
             <Select onValueChange={handleChange} value={value}>
                 <Select.Trigger>
-                    <Select.Value placeholder="Select a role" />
+                    <Select.Value placeholder="Seleccionar rol" />
                 </Select.Trigger>
                 <Select.Content>
                     {roles &&
@@ -354,16 +354,16 @@ const DrawerLoadPolicies: React.FC<{
     return (
         <Drawer open={drawerIsOpen} onOpenChange={setDrawerIsOpen}>
             <Drawer.Trigger asChild>
-                <Button>{`Load policies from role`}</Button>
+                <Button>{`Cargar politicas del rol`}</Button>
             </Drawer.Trigger>
             <Drawer.Content>
                 <Drawer.Header>
-                    <Drawer.Title>Select role</Drawer.Title>
+                    <Drawer.Title>Seleccionar rol</Drawer.Title>
                 </Drawer.Header>
                 <Drawer.Body className="p-4">
                     <Grid container direction="column" columnSpacing={10} rowSpacing={3}>
                         <Grid>
-                            <Label>Choose role</Label>
+                            <Label>Elegir rol</Label>
                         </Grid>
                         <Grid>
                             <AvailableRolesList setChosenRole={setChosenRole} />
@@ -372,7 +372,7 @@ const DrawerLoadPolicies: React.FC<{
                 </Drawer.Body>
                 <Drawer.Footer>
                     <Drawer.Close asChild>
-                        <Button variant="secondary">Cancel</Button>
+                        <Button variant="secondary">Cancelar</Button>
                     </Drawer.Close>
                     <Button
                         onClick={() => {
@@ -382,7 +382,7 @@ const DrawerLoadPolicies: React.FC<{
                             setDrawerIsOpen(false);
                         }}
                     >
-                        Load
+                        Cargar
                     </Button>
                 </Drawer.Footer>
             </Drawer.Content>
@@ -406,10 +406,10 @@ const CreateRolePoliciesStep: React.FC<{
                         <Grid container justifyContent="space-between">
                             <Grid container direction="column" spacing={1}>
                                 <Grid>
-                                    <Heading level="h1">Edit policies</Heading>
+                                    <Heading level="h1">Editar politicas</Heading>
                                 </Grid>
                                 <Grid>
-                                    <Text>Define policies for the role</Text>
+                                    <Text>Definir politicas para el rol</Text>
                                 </Grid>
                             </Grid>
                             <Grid>
@@ -487,7 +487,7 @@ const CreateRoleModal: React.FC<{ reloadTable: () => void }> = ({ reloadTable })
                 } else {
                     setError("name", {
                         type: "custom",
-                        message: "Please fill the name",
+                        message: "Por favor, escriba el nombre",
                     });
                     return false;
                 }
@@ -545,8 +545,8 @@ const CreateRoleModal: React.FC<{ reloadTable: () => void }> = ({ reloadTable })
             },
         })
             .then(({ message }) => {
-                toast.info("Role", {
-                    description: "New role has been created",
+                toast.info("Rol", {
+                    description: "Nuevo rol creado",
                 });
                 reloadTable();
                 setIsOpen(false);
@@ -619,7 +619,7 @@ const CreateRoleModal: React.FC<{ reloadTable: () => void }> = ({ reloadTable })
     return (
         <FocusModal open={isOpen} onOpenChange={setIsOpen}>
             <FocusModal.Trigger>
-                <Button variant="secondary">Create</Button>
+                <Button variant="secondary">Crear</Button>
             </FocusModal.Trigger>
             <form>
                 <FocusModal.Content>
@@ -642,7 +642,7 @@ const CreateRoleModal: React.FC<{ reloadTable: () => void }> = ({ reloadTable })
                                             value="policies"
                                             status={tabState.policies as "not-started" | "in-progress" | "completed"}
                                         >
-                                            Policies
+                                            Politicas
                                         </ProgressTabs.Trigger>
                                     </ProgressTabs.List>
                                 </div>
@@ -672,7 +672,7 @@ const CreateRoleModal: React.FC<{ reloadTable: () => void }> = ({ reloadTable })
                                     <Grid container columnSpacing={2} rowSpacing={5}>
                                         <Grid>
                                             <FocusModal.Close>
-                                                <Button variant="secondary">Cancel</Button>
+                                                <Button variant="secondary">Cancelar</Button>
                                             </FocusModal.Close>
                                         </Grid>
                                         <Grid>
@@ -721,14 +721,14 @@ const DeleteRole: React.FC<{ roleId: string; setLoading: (loading: boolean) => v
             </Prompt.Trigger>
             <Prompt.Content>
                 <Prompt.Header>
-                    <Prompt.Title>Delete role</Prompt.Title>
+                    <Prompt.Title>Eliminar rol</Prompt.Title>
                     <Prompt.Description>
-                        Are you sure? This cannot be undone.
+                        ¿Esta seguro? Esta accion no se puede deshacer.
                     </Prompt.Description>
                 </Prompt.Header>
                 <Prompt.Footer>
                     <Prompt.Cancel onClick={(e) => e.stopPropagation()}>
-                        Cancel
+                        Cancelar
                     </Prompt.Cancel>
                     <Prompt.Action
                         onClick={(e) => {
@@ -736,7 +736,7 @@ const DeleteRole: React.FC<{ roleId: string; setLoading: (loading: boolean) => v
                             handleAction();
                         }}
                     >
-                        Delete
+                        Eliminar
                     </Prompt.Action>
                 </Prompt.Footer>
             </Prompt.Content>
@@ -812,9 +812,9 @@ function RolesTable$() {
                     <Table>
                         <Table.Header>
                             <Table.Row>
-                                <Table.HeaderCell>Name</Table.HeaderCell>
-                                <Table.HeaderCell>Policies</Table.HeaderCell>
-                                <Table.HeaderCell>Members</Table.HeaderCell>
+                                <Table.HeaderCell>Nombre</Table.HeaderCell>
+                                <Table.HeaderCell>Politicas</Table.HeaderCell>
+                                <Table.HeaderCell>Miembros</Table.HeaderCell>
                                 <Table.HeaderCell />
                             </Table.Row>
                         </Table.Header>
@@ -840,8 +840,8 @@ function RolesTable$() {
                                                 paddingTop={1}
                                                 paddingBottom={1}
                                             >
-                                                <Grid>{`${role.policies.filter((pol) => pol.type === AdminRbacPolicyType.ALLOW).length} allowed`}</Grid>
-                                                <Grid>{`${role.policies.filter((pol) => pol.type === AdminRbacPolicyType.DENY).length} denied`}</Grid>
+                                                <Grid>{`${role.policies.filter((pol) => pol.type === AdminRbacPolicyType.ALLOW).length} permitido`}</Grid>
+                                                <Grid>{`${role.policies.filter((pol) => pol.type === AdminRbacPolicyType.DENY).length} denegado`}</Grid>
                                             </Grid>
                                         </Table.Cell>
                                         <Table.Cell

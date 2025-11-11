@@ -7,7 +7,7 @@ const MainPage = () => {
   return (
     <Grid container direction="column" rowSpacing={3}>
       <Grid>
-        <Heading level="h1">RBAC system</Heading>
+        <Heading level="h1">Sistema de permisos</Heading>
       </Grid>
       <Grid>
         <Dashboard />

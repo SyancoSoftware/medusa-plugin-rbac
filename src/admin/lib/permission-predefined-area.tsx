@@ -69,8 +69,8 @@ export const PermissionsPredefinedArea = () => {
                                     <Grid>
                                         <Text>
                                             {viewType === "category"
-                                                ? "Category view"
-                                                : "Permission view"}
+                                                ? "Vista de categoria"
+                                                : "Vista de permiso"}
                                         </Text>
                                     </Grid>
                                     <Grid>

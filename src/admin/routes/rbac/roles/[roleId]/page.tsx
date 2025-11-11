@@ -38,7 +38,7 @@ const DrawerEditRoleGeneral: React.FC<{
         setError(undefined);
         return true;
       }
-      setError("Name cannot be empty");
+      setError("El nombre no puede estar vacio");
       return false;
     }
     useEffect(() => {
@@ -48,12 +48,12 @@ const DrawerEditRoleGeneral: React.FC<{
       <Drawer open={drawerIsOpen} onOpenChange={setDrawerIsOpen}>
         <Drawer.Content>
           <Drawer.Header>
-            <Drawer.Title>Edit role</Drawer.Title>
+            <Drawer.Title>Editar rol</Drawer.Title>
           </Drawer.Header>
           <Drawer.Body>
             <Grid container direction="column" rowSpacing={3}>
               <Grid>
-                <Label>Name</Label>
+                <Label>Nombre</Label>
               </Grid>
               <Grid>
                 <Input
@@ -70,7 +70,7 @@ const DrawerEditRoleGeneral: React.FC<{
           </Drawer.Body>
           <Drawer.Footer>
             <Drawer.Close asChild>
-              <Button variant="secondary">Cancel</Button>
+              <Button variant="secondary">Cancelar</Button>
             </Drawer.Close>
             <Button
               disabled={error !== undefined}
@@ -83,7 +83,7 @@ const DrawerEditRoleGeneral: React.FC<{
                 }
               }}
             >
-              Update
+              Actualizar
             </Button>
           </Drawer.Footer>
         </Drawer.Content>
@@ -125,7 +125,7 @@ const DrawerEditRoleGeneral: React.FC<{
     return (
       <Container className="divide-y">
         <Header
-          title="Overview"
+          title="Vista previa"
           actions={[
             {
               type: "action-menu",
@@ -135,7 +135,7 @@ const DrawerEditRoleGeneral: React.FC<{
                     actions: [
                       {
                         icon: <Pencil />,
-                        label: "Edit",
+                        label: "Editar",
                         onClick: () => setDrawerIsOpen(true),
                       },
                     ],
@@ -151,14 +151,14 @@ const DrawerEditRoleGeneral: React.FC<{
           currentRole={rbacRole}
           setRole={updateRole}
         />
-        <SectionRow title="Name" value={rbacRole.name} />
+        <SectionRow title="Nombre" value={rbacRole.name} />
         <SectionRow
-          title="Policies"
-          value={`${rbacRole.policies.filter((pol: RbacPolicy) => pol.type === AdminRbacPolicyType.ALLOW).length} allowed,
-                    ${rbacRole.policies.filter((pol: RbacPolicy) => pol.type === AdminRbacPolicyType.DENY).length} denied`}
+          title="Politicas"
+          value={`${rbacRole.policies.filter((pol: RbacPolicy) => pol.type === AdminRbacPolicyType.ALLOW).length} permitido,
+                    ${rbacRole.policies.filter((pol: RbacPolicy) => pol.type === AdminRbacPolicyType.DENY).length} denegado`}
         />
         <SectionRow
-          title="Users"
+          title="Usuarios"
           value={<AssignedUsers users={rbacRole.users} />}
         />
       </Container>
@@ -194,7 +194,7 @@ const DrawerEditRoleGeneral: React.FC<{
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>Email</Table.HeaderCell>
-              <Table.HeaderCell>Name</Table.HeaderCell>
+              <Table.HeaderCell>Nombre</Table.HeaderCell>
               <Table.HeaderCell />
             </Table.Row>
           </Table.Header>
@@ -232,7 +232,7 @@ const DrawerEditRoleGeneral: React.FC<{
       <Container>
         <Grid container direction="column" className="divide-y">
           <Grid>
-            <Header title={`Assigned users`} />
+            <Header title={`Usuarios asignados`} />
           </Grid>
           <Grid>
             <UsersTable users={rbacRole.users} />
@@ -251,10 +251,10 @@ const DrawerEditRoleGeneral: React.FC<{
       <Table>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>Name</Table.HeaderCell>
-            <Table.HeaderCell>Type</Table.HeaderCell>
-            <Table.HeaderCell>Target</Table.HeaderCell>
-            <Table.HeaderCell>Action</Table.HeaderCell>
+            <Table.HeaderCell>Nombre</Table.HeaderCell>
+            <Table.HeaderCell>Tipo</Table.HeaderCell>
+            <Table.HeaderCell>Objetivo</Table.HeaderCell>
+            <Table.HeaderCell>Accion</Table.HeaderCell>
             <Table.HeaderCell>Decision</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -316,9 +316,9 @@ const DrawerEditRoleGeneral: React.FC<{
       <Table>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>Name</Table.HeaderCell>
-            <Table.HeaderCell>Permissions</Table.HeaderCell>
-            <Table.HeaderCell>Allow</Table.HeaderCell>
+            <Table.HeaderCell>Nombre</Table.HeaderCell>
+            <Table.HeaderCell>Permisos</Table.HeaderCell>
+            <Table.HeaderCell>Permitir</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -433,7 +433,7 @@ const DrawerEditRoleGeneral: React.FC<{
       <Container>
         <Grid container direction="column" className="divide-y">
           <Header
-            title={`Assigned policies`}
+            title={`Politicas asignadas`}
             actions={[
               {
                 type: "custom",
@@ -442,8 +442,8 @@ const DrawerEditRoleGeneral: React.FC<{
                     <Grid>
                       <Text>
                         {viewType === "category"
-                          ? "Category view"
-                          : "Permission view"}
+                          ? "Vista de categorias"
+                          : "Vista de permisos"}
                       </Text>
                     </Grid>
                     <Grid>

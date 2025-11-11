@@ -38,7 +38,7 @@ export const DashboardMembersCard: React.FC = () => {
             {isLoading && <LoadingSpinner size={10} />}
             {!isLoading && (
               <Heading>
-                {members.length} {members.length === 1 ? "member" : "members"}
+                {members.length} {members.length === 1 ? "miembro" : "miembros"}
               </Heading>
             )}
           </Grid>
@@ -49,7 +49,7 @@ export const DashboardMembersCard: React.FC = () => {
           {!isLoading && (
             <Text>
               {members.filter((member) => member.role !== undefined).length}{" "}
-              assigned
+              asignados
             </Text>
           )}
         </Grid>
@@ -58,7 +58,7 @@ export const DashboardMembersCard: React.FC = () => {
           {!isLoading && (
             <Text>
               {members.filter((member) => member.role === undefined).length}{" "}
-              unassigned
+              sin asignar
             </Text>
           )}
         </Grid>
@@ -69,7 +69,7 @@ export const DashboardMembersCard: React.FC = () => {
               display: "contents",
             }}
           >
-            <Button>Configure</Button>
+            <Button>Configurar</Button>
           </Link>
         </Grid>
       </Grid>
@@ -141,7 +141,7 @@ export const DashboardRolesCard = () => {
               display: "contents",
             }}
           >
-            <Button>Configure</Button>
+            <Button>Configurar</Button>
           </Link>
         </Grid>
       </Grid>
@@ -211,7 +211,7 @@ export const DashboardAssignedRolesCard: React.FC = () => {
       <Grid container direction="column" spacing={3}>
         <Grid>
           {isLoading && <LoadingSpinner size={10} />}
-          {!isLoading && <Heading>{`Most used roles`}</Heading>}
+          {!isLoading && <Heading>{`Roles mas usados`}</Heading>}
         </Grid>
         <Grid>
           {isLoading && <LoadingSpinner size={10} />}
@@ -248,7 +248,7 @@ export const DashboardPermissionsCard: React.FC = () => {
             {!isLoading && (
               <Heading>
                 {permissions.length}{" "}
-                {permissions.length === 1 ? "permission" : "permissions"}
+                {permissions.length === 1 ? "permiso" : "permisos"}
               </Heading>
             )}
           </Grid>
@@ -263,7 +263,7 @@ export const DashboardPermissionsCard: React.FC = () => {
                   (perm) => perm.type === PermissionType.PREDEFINED,
                 ).length
               }{" "}
-              predefined
+              predefinido
             </Text>
           )}
         </Grid>
@@ -275,7 +275,7 @@ export const DashboardPermissionsCard: React.FC = () => {
                 permissions.filter((perm) => perm.type === PermissionType.CUSTOM)
                   .length
               }{" "}
-              custom
+              personalizado
             </Text>
           )}
         </Grid>
@@ -286,7 +286,7 @@ export const DashboardPermissionsCard: React.FC = () => {
               display: "contents",
             }}
           >
-            <Button>Configure</Button>
+            <Button>Configurar</Button>
           </Link>
         </Grid>
       </Grid>

@@ -33,7 +33,7 @@ const SelectRole: React.FC<{
     <div className="w-[256px]">
       <Select onValueChange={handleChange} value={value}>
         <Select.Trigger>
-          <Select.Value placeholder="Select a role" />
+          <Select.Value placeholder="Seleccionar rol" />
         </Select.Trigger>
         <Select.Content>
           {roles &&
@@ -93,16 +93,16 @@ const DrawerEditUser: React.FC<{
   return (
     <Drawer open={drawerIsOpen} onOpenChange={setDrawerIsOpen}>
       <Drawer.Trigger asChild>
-        <Button>{`Assign`}</Button>
+        <Button>{`Asignar`}</Button>
       </Drawer.Trigger>
       <Drawer.Content>
         <Drawer.Header>
-          <Drawer.Title>Select role</Drawer.Title>
+          <Drawer.Title>Seleccionar rol</Drawer.Title>
         </Drawer.Header>
         <Drawer.Body className="p-4">
           <Grid container direction="column" columnSpacing={10} rowSpacing={3}>
             <Grid>
-              <Label>Choose role</Label>
+              <Label>Elegir rol</Label>
             </Grid>
             <Grid>
               <AvailableRolesList
@@ -114,7 +114,7 @@ const DrawerEditUser: React.FC<{
         </Drawer.Body>
         <Drawer.Footer>
           <Drawer.Close asChild>
-            <Button variant="secondary">Cancel</Button>
+            <Button variant="secondary">Cancelar</Button>
           </Drawer.Close>
           <Button
             onClick={() => {
@@ -122,7 +122,7 @@ const DrawerEditUser: React.FC<{
               setDrawerIsOpen(false);
             }}
           >
-            Save
+            Guardar
           </Button>
         </Drawer.Footer>
       </Drawer.Content>
@@ -138,7 +138,7 @@ const RoleBadge: React.FC<{ role?: Nullable<RbacRole> }> = ({ role }) => {
       </Badge>
     );
   }
-  return <Badge size="small">Unassigned</Badge>;
+  return <Badge size="small">Sin asignar</Badge>;
 };
 
 function MembersTableComponent() {
@@ -208,9 +208,9 @@ function MembersTableComponent() {
       <Table>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>Name</Table.HeaderCell>
+            <Table.HeaderCell>Nombre</Table.HeaderCell>
             <Table.HeaderCell>Email</Table.HeaderCell>
-            <Table.HeaderCell>Role</Table.HeaderCell>
+            <Table.HeaderCell>Rol</Table.HeaderCell>
             <Table.HeaderCell />
           </Table.Row>
         </Table.Header>
