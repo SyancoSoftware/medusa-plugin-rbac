@@ -132,17 +132,17 @@ export default async function seedRbacData({
 
   const permissionsToCreate = PREDEFINED_CATEGORIES.flatMap((category) => {
     switch (category.name) {
-      case "Orders":
+      case "Pedidos":
         return PREDEFINED_PERMISSIONS_ORDERS.map((permission) => ({
           ...permission,
           category: category.name,
         }));
-      case "Products":
+      case "Productos":
         return PREDEFINED_PERMISSIONS_PRODUCTS.map((permission) => ({
           ...permission,
           category: category.name,
         }));
-      case "Customers":
+      case "Clientes":
         return PREDEFINED_PERMISSIONS_CUSTOMERS.map((permission) => ({
           ...permission,
           category: category.name,
