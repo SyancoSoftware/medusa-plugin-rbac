@@ -37,7 +37,7 @@ const stepCreate = createStep(
     const logger = context.container.resolve<any>("logger");
 
     const results = await rbacModuleService.listRbacPermissions();
-    logger.info(`Current rbac permissions: ${JSON.stringify(results)}`);
+    logger.info(`Permisos rbac actuales: ${JSON.stringify(results)}`);
 
     const permissionsToCreate = permissions.filter((permission) => {
       return !results.find((result: any) => {
@@ -50,7 +50,7 @@ const stepCreate = createStep(
     });
 
     logger.info(
-      `Rbac permissions to create: ${JSON.stringify(permissionsToCreate)}`
+      `Permisos RBAC para crear:: ${JSON.stringify(permissionsToCreate)}`
     );
 
     const rbacPermissions = await rbacModuleService.createRbacPermissions(
@@ -63,20 +63,20 @@ const stepCreate = createStep(
     if (rbacPermissions) {
       if (permissionsToCreate.length < permissions.length) {
         logger.info(
-          `Permissions has been created. Some of them already existed.`
+          `Se han creado los permisos. Algunos de ellos ya existían.`
         );
 
         return new StepResponse(
-          `Permissions has been created. Some of them already existed.`
+          `Se han creado los permisos. Algunos de ellos ya existían.`
         );
       }
 
-      logger.info(`Permissions has been created.`);
-      return new StepResponse(`Permissions has been created.`);
+      logger.info(`Se han creado los permisos.`);
+      return new StepResponse(`Se han creado los permisos.`);
     }
 
-    logger.info(`Permissions has NOT been created`);
-    return new StepResponse(`Permissions has NOT been created`);
+    logger.info(`No se han creado los permisos.`);
+    return new StepResponse(`No se han creado los permisos.`);
   }
 );
 

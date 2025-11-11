@@ -33,7 +33,7 @@ const stepCreate = createStep(
       await rbacModuleService.listAndCountRbacPermissionCategories();
 
     logger.info(
-      `Current rbac permissions categories: ${JSON.stringify(results)}`
+      `Categorías actuales de permisos RBAC: ${JSON.stringify(results)}`
     );
 
     const categoriesToCreate = categories.filter((category) => {
@@ -41,7 +41,7 @@ const stepCreate = createStep(
     });
 
     logger.info(
-      `Rbac permissions categories to create: ${JSON.stringify(
+      `Categorías de permisos RBAC para crear: ${JSON.stringify(
         categoriesToCreate
       )}`
     );
@@ -57,10 +57,10 @@ const stepCreate = createStep(
     if (rbacPermissionCategories) {
       if (categoriesToCreate.length < categories.length) {
         logger.info(
-          `Permissions categories has been created. Some of them already existed.`
+          `Se han creado categorías de permisos. Algunas de ellas ya existían.`
         );
       } else {
-        logger.info(`Permissions categories has been created.`);
+        logger.info(`Se han creado las categorías de permisos.`);
       }
     }
 

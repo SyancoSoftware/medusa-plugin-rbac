@@ -47,11 +47,11 @@ const stepCreate = createStep(
     });
 
     if (isPermissionExists) {
-      logger.error(`Permission has NOT been created. It already exists.`);
+      logger.error(`El permiso NO se ha creado. Ya existe.`);
       return new StepResponse(undefined);
     }
 
-    logger.info(`Rbac permission to create: ${JSON.stringify(permission)}`);
+    logger.info(`Permiso RBAC para crear: ${JSON.stringify(permission)}`);
 
     const rbacPermission = await rbacModuleService.createRbacPermissions({
       ...permission,
@@ -63,7 +63,7 @@ const stepCreate = createStep(
       return new StepResponse(rbacPermission);
     }
 
-    logger.error(`Permission has NOT been created`);
+    logger.error(`No se ha creado el permiso.`);
     return new StepResponse(undefined);
   }
 );

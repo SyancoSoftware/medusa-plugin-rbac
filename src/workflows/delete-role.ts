@@ -29,7 +29,7 @@ const stepDeleteRole = createStep(
       id: roleId,
     });
 
-    return new StepResponse(`Role has been deleted`);
+    return new StepResponse(`Rol creado`);
   }
 );
 
