@@ -28,7 +28,7 @@ export const POST = async (req: any, res: any) => {
   ) {
     throw new MedusaError(
       MedusaError.Types.NOT_ALLOWED,
-      "Category already exists"
+      "La categoría de permisos ya existe"
     );
   }
 
@@ -41,7 +41,7 @@ export const POST = async (req: any, res: any) => {
   if (!newCategory) {
     throw new MedusaError(
       MedusaError.Types.INVALID_DATA,
-      "Error when creating category"
+      "Error al crear la categoría de permisos"
     );
   }
 

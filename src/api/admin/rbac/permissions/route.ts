@@ -29,7 +29,7 @@ export const POST = async (req: any, res: any) => {
 
   throw new MedusaError(
     MedusaError.Types.NOT_ALLOWED,
-    "Permission already exists"
+    "El permiso ya existe"
   );
 };
 
