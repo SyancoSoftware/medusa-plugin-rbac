@@ -10,6 +10,7 @@ import {
   Input,
   Switch,
   Select,
+  toast,
 } from "@medusajs/ui";
 import React, { useState, useEffect, useMemo } from "react";
 import {
@@ -114,13 +115,19 @@ const RbacRoleGeneral: React.FC<{
         reloadTable();
         setDrawerIsOpen(false);
         if (message) {
+          toast.error("Error al actualizar el rol", {
+            description: message,
+          });
           throw message;
         }
+        toast.success("Rol actualizado");
       })
       .catch((e) => {
         reloadTable();
         setDrawerIsOpen(false);
-        console.error(e);
+        toast.error("Error al actualizar el rol", {
+          description: e?.message ?? e.toString(),
+        });
       });
   }
   return (
@@ -281,9 +288,12 @@ const AssignUserDrawer: React.FC<{
       .then(() => {
         onAssigned();
         setOpen(false);
+        toast.success("Usuario asignado");
       })
       .catch((error) => {
-        console.error(error);
+        toast.error("No se pudo asignar el usuario", {
+          description: error?.message ?? error.toString(),
+        });
       })
       .finally(() => setAssigning(false));
   };
@@ -630,9 +640,12 @@ const EditPoliciesDrawer: React.FC<{
       .then(() => {
         onUpdated();
         setDrawerIsOpen(false);
+        toast.success("Políticas actualizadas");
       })
       .catch((error) => {
-        console.error(error);
+        toast.error("No se pudieron actualizar las políticas", {
+          description: error?.message ?? error.toString(),
+        });
       })
       .finally(() => setSaving(false));
   };

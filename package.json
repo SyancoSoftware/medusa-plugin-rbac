@@ -24,6 +24,7 @@
     "prepublishOnly": "medusa plugin:build"
   },
   "dependencies": {
+    "path-to-regexp": "^6.2.1",
     "react-hook-form": "^7.55.0"
   },
   "devDependencies": {

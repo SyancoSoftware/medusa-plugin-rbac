@@ -1,5 +1,6 @@
 import { ContainerRegistrationKeys } from "@medusajs/utils";
-import { ExecArgs } from "@medusajs/framework/types"
+import { ExecArgs } from "@medusajs/framework/types";
+
 import {
   ActionType,
   PermissionCategoryType,
@@ -113,60 +114,54 @@ const PREDEFINED_PERMISSIONS_CUSTOMERS = [
 export default async function seedRbacData({
   container,
 }: ExecArgs): Promise<void> {
-  const logger = container.resolve(
-    ContainerRegistrationKeys.LOGGER
-  );
-  
+  const logger = container.resolve(ContainerRegistrationKeys.LOGGER);
+
   logger.info("Comienza a asignar permisos rbac");
-  
-  // Crear categorías
+
   await createPermissionCategoryWorkflow(container).run({
-    input: {  
+    input: {
       categories: PREDEFINED_CATEGORIES,
     },
   });
-  
-  // ✅ NUEVO: Obtener las categorías con sus IDs
+
   const rbacModuleService = container.resolve<RbacModuleService>(RBAC_MODULE);
   const categories = await rbacModuleService.listRbacPermissionCategories();
-  
-  // Crear un mapa de nombre -> ID
-  const categoryMap = new Map(
-    categories.map((cat: any) => [cat.name, cat.id])
+
+  const categoryMap = new Map(categories.map((cat: any) => [cat.name, cat.id]));
+
+  logger.info(
+    `Mapa de categorías: ${JSON.stringify(Object.fromEntries(categoryMap))}`
   );
-  
-  logger.info(`Mapa de categorías: ${JSON.stringify(Object.fromEntries(categoryMap))}`);
-  
-  // Crear permisos con los IDs correctos
+
   const permissionsToCreate = PREDEFINED_CATEGORIES.flatMap((category) => {
     const categoryId = categoryMap.get(category.name);
-    
+
     if (!categoryId) {
       logger.warn(`No se encontró el ID para la categoría: ${category.name}`);
       return [];
     }
-    
+
     switch (category.name) {
       case "Pedidos":
         return PREDEFINED_PERMISSIONS_ORDERS.map((permission) => ({
           ...permission,
-          category_id: categoryId, // ✅ Usar category_id con el ID real
+          category_id: categoryId,
         }));
       case "Productos":
         return PREDEFINED_PERMISSIONS_PRODUCTS.map((permission) => ({
           ...permission,
-          category_id: categoryId, // ✅ Usar category_id con el ID real
+          category_id: categoryId,
         }));
       case "Clientes":
         return PREDEFINED_PERMISSIONS_CUSTOMERS.map((permission) => ({
           ...permission,
-          category_id: categoryId, // ✅ Usar category_id con el ID real
+          category_id: categoryId,
         }));
       default:
         return [];
     }
   });
-  
+
   await createPermissionsWorkflow(container).run({
     input: {
       permissions: permissionsToCreate.filter(
@@ -174,6 +169,28 @@ export default async function seedRbacData({
       ),
     },
   });
-  
+
+  const permissions = await rbacModuleService.listRbacPermissions();
+  const existingRoles = await rbacModuleService.listRbacRoles();
+  const adminRole = existingRoles.find(
+    (role: any) => role.name === "Administrador"
+  );
+
+  if (!adminRole) {
+    logger.info("Creando rol Administrador con todos los permisos en ALLOW");
+    await rbacModuleService.addRole({
+      name: "Administrador",
+      policies: permissions.map((perm: any) => ({
+        permission: { id: perm.id },
+        matcher: perm.matcher,
+        matcherType: perm.matcherType,
+        actionType: perm.actionType,
+        type: "allow",
+      })),
+    });
+  } else {
+    logger.info("Rol Administrador ya existe, se omite creación");
+  }
+
   logger.info("Finalizada la configuración de los permisos rbac");
 }

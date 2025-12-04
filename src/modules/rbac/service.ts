@@ -1,6 +1,7 @@
 import crypto from "crypto";
 
 import { MedusaService } from "@medusajs/framework/utils";
+import { pathToRegexp } from "path-to-regexp";
 
 import { ActionType, PermissionMatcherType, PolicyType } from "./types";
 import RbacRole from "./models/rbac-role";
@@ -118,7 +119,7 @@ NQIDAQAB
     actionType: ActionType
   ): PolicyType | undefined {
     const normalizePath = (value: string) =>
-      value.replace(/\/+$/, "") || "/";
+      value.split("?")[0].replace(/\/+$/, "") || "/";
 
     if (policy.permission.matcherType !== requestedType) {
       return undefined;
@@ -127,24 +128,20 @@ NQIDAQAB
     if (requestedType === PermissionMatcherType.API) {
       const configuredMatcher = normalizePath(policy.permission.matcher);
       const requestMatcher = normalizePath(matcher);
-      const wildcard = configuredMatcher.includes("*");
-      const regex = wildcard
-        ? new RegExp(
-            "^" +
-              configuredMatcher
-                .split("*")
-                .map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
-                .join(".*") +
-              "$"
-          )
-        : null;
 
-      if (
-        ((regex && regex.test(requestMatcher)) ||
-          (!regex && requestMatcher === configuredMatcher)) &&
-        policy.permission.actionType === actionType
-      ) {
-        return policy.type;
+      try {
+        const regexp = pathToRegexp(configuredMatcher === "" ? "/" : configuredMatcher);
+        if (regexp.test(requestMatcher) && policy.permission.actionType === actionType) {
+          return policy.type;
+        }
+      } catch (e) {
+        // fallback to equality if pattern compilation fails
+        if (
+          requestMatcher === configuredMatcher &&
+          policy.permission.actionType === actionType
+        ) {
+          return policy.type;
+        }
       }
     } else if (
       policy.permission.matcherType === requestedType &&

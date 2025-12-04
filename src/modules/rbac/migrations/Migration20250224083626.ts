@@ -18,6 +18,9 @@ export class Migration20250224083626 extends Migration {
       `CREATE INDEX IF NOT EXISTS "IDX_rbac_permission_deleted_at" ON "rbac_permission" (deleted_at) WHERE deleted_at IS NULL;`
     );
     this.addSql(
+      `DELETE FROM "rbac_permission" rp USING (SELECT id, ROW_NUMBER() OVER (PARTITION BY "matcherType","matcher","actionType","deleted_at" ORDER BY created_at) AS rn FROM "rbac_permission") dup WHERE rp.id = dup.id AND dup.rn > 1;`
+    );
+    this.addSql(
       `CREATE UNIQUE INDEX IF NOT EXISTS "UQ_rbac_permission_matcher" ON "rbac_permission" (COALESCE("matcherType", ''), COALESCE("matcher", ''), COALESCE("actionType", '')) WHERE deleted_at IS NULL;`
     );
     this.addSql(

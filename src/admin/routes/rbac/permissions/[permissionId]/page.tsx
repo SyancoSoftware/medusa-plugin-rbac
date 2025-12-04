@@ -7,6 +7,7 @@ import {
     Input,
     Select,
     Text,
+    toast,
 } from "@medusajs/ui";
 import React, { useState, useEffect } from "react";
 import {
@@ -213,13 +214,19 @@ const RbacPermissionGeneral: React.FC<{
                 reloadTable();
                 setDrawerIsOpen(false);
                 if (message) {
+                    toast.error("Error al actualizar el permiso", {
+                        description: message,
+                    });
                     throw message;
                 }
+                toast.success("Permiso actualizado");
             })
             .catch((e) => {
                 reloadTable();
                 setDrawerIsOpen(false);
-                console.error(e);
+                toast.error("Error al actualizar el permiso", {
+                    description: e?.message ?? e.toString(),
+                });
             });
     }
     return (
