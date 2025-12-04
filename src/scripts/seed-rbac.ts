@@ -6,6 +6,7 @@ import {
   PermissionCategoryType,
   PermissionMatcherType,
   PermissionType,
+  PolicyType,
 } from "../modules/rbac/types";
 import createPermissionCategoryWorkflow from "../workflows/create-permission-category";
 import createPermissionsWorkflow from "../workflows/create-permissions";
@@ -187,7 +188,7 @@ export default async function seedRbacData({
           matcherType: perm.matcherType,
           actionType: perm.actionType,
         },
-        type: "allow" as any,
+        type: "allow" as PolicyType,
       })),
     });
   } else {
