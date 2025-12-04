@@ -27,3 +27,9 @@ export enum AdminRbacPolicyType {
   DENY = "deny",
   ALLOW = "allow",
 }
+
+export enum LicenceStatus {
+  EXPIRED = "EXPIRED",
+  VALID = "VALID",
+  INVALID = "INVALID",
+}

@@ -790,6 +790,7 @@ export const RbacRolePage = () => {
   const { roleId } = useParams();
   const [role, setRole] = useState<RoleWithUsers | undefined>(undefined);
   const [isLoading, setLoading] = useState(true);
+  const reloadRole = () => setLoading(true);
   useEffect(() => {
     if (!isLoading) {
       return;
@@ -813,11 +814,11 @@ export const RbacRolePage = () => {
   }
   return (
     <SingleColumnLayout>
-      <RbacRoleGeneral rbacRole={role} reloadTable={() => setLoading(true)} />
-      <RbacRoleAssignedUsers rbacRole={role} />
+      <RbacRoleGeneral rbacRole={role} reloadTable={reloadRole} />
+      <RbacRoleAssignedUsers rbacRole={role} reload={reloadRole} />
       <RbacRoleAssignedPolicies
         rbacRole={role}
-        reloadRole={() => setLoading(true)}
+        reloadRole={reloadRole}
       />
     </SingleColumnLayout>
   );

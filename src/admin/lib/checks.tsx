@@ -5,7 +5,7 @@ import { Alert } from "@medusajs/ui";
 import { LoadingSpinner } from "./loading-spinner";
 import { Grid } from "./grid";
 import { AuthorizationCheckResult } from "./types";
-import { LicenceStatus } from "../../modules/rbac/service";
+import { LicenceStatus } from "../../modules/rbac/types";
 
 
 export const RbacAuthorizationCheck: React.FC<{ children: React.ReactNode }> = ({

@@ -3,17 +3,17 @@ import crypto from "crypto";
 import { MedusaService } from "@medusajs/framework/utils";
 import { match as pathMatch } from "path-to-regexp";
 
-import { ActionType, PermissionMatcherType, PolicyType } from "./types";
+import {
+  ActionType,
+  LicenceStatus,
+  PermissionMatcherType,
+  PolicyType,
+} from "./types";
 import RbacRole from "./models/rbac-role";
 import RbacPolicy from "./models/rbac-policy";
 import RbacPermission from "./models/rbac-permission";
 import RbacPermissionCategory from "./models/rbac-permission-category";
-
-export enum LicenceStatus {
-  EXPIRED = "EXPIRED",
-  VALID = "VALID",
-  INVALID = "INVALID",
-}
+export { LicenceStatus } from "./types";
 
 const _unusedCrypto = crypto; // Keep import for future licence validation logic.
 

@@ -180,13 +180,16 @@ const DrawerEditPermissionGeneral: React.FC<{
                             }
                             onClick={() => {
                                 if (!error && name && matcher && matcherType && actionType) {
+                                    const selectedCategory = categoryId
+                                        ? categories.find((cat) => cat.id === categoryId) ?? null
+                                        : null;
                                     setPermission({
                                         ...currentPermission,
                                         name,
                                         matcher,
                                         matcherType,
                                         actionType,
-                                        category: categoryId ? { id: categoryId } : null,
+                                        category: selectedCategory,
                                     });
                                 }
                             }}
