@@ -37,7 +37,7 @@ const stepCreate = createStep(
     );
 
     const categoriesToCreate = categories.filter((category) => {
-      return !results[0].find((result: any) => result.name !== category.name);
+      return !results[0].find((result: any) => result.name === category.name);
     });
 
     logger.info(

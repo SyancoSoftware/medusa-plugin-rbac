@@ -8,6 +8,7 @@ export const convertApiMethodToRbacAction = (
       return ActionType.READ;
     case "POST":
     case "PUT":
+    case "PATCH":
       return ActionType.WRITE;
     case "DELETE":
       return ActionType.DELETE;

@@ -5,13 +5,15 @@ import {
     Drawer,
     Label,
     Input,
+    Select,
+    Text,
 } from "@medusajs/ui";
 import React, { useState, useEffect } from "react";
 import {
     Pencil,
 } from "@medusajs/icons";
 import { useParams } from "react-router-dom";
-import { Grid, LoadingSpinner, RbacPermission, sdk } from "../../../../lib";
+import { Grid, LoadingSpinner, RbacPermission, RbacPermissionCategory, PermissionActionType, PermissionMatcherType, sdk } from "../../../../lib";
 import { Header } from "../../../../lib/header";
 import { SectionRow } from "../../../../lib/section-row";
 
@@ -25,15 +27,22 @@ const DrawerEditPermissionGeneral: React.FC<{
     drawerIsOpen: boolean;
     setDrawerIsOpen: (open: boolean) => void;
     currentPermission: RbacPermission;
+    categories: RbacPermissionCategory[];
     setPermission: (permission: RbacPermission) => void;
 }> = ({
     drawerIsOpen,
     setDrawerIsOpen,
     currentPermission,
+    categories,
     setPermission,
 }) => {
         const [error, setError] = useState<string | undefined>(undefined);
         const [name, setName] = useState(currentPermission.name);
+        const [matcher, setMatcher] = useState(currentPermission.matcher);
+        const [matcherType, setMatcherType] = useState<PermissionMatcherType>(currentPermission.matcherType);
+        const [actionType, setActionType] = useState<PermissionActionType>(currentPermission.actionType);
+        const [categoryId, setCategoryId] = useState<string | undefined>(currentPermission.category?.id);
+
         function validateName2(value: string) {
             if (value && value.length > 0) {
                 setError(undefined);
@@ -42,9 +51,22 @@ const DrawerEditPermissionGeneral: React.FC<{
             setError("El nombre es obligatorio");
             return false;
         }
+        function validateMatcher(value: string) {
+            if (value && value.length > 0) {
+                setError(undefined);
+                return true;
+            }
+            setError("El matcher es obligatorio");
+            return false;
+        }
         useEffect(() => {
             setError(undefined);
-        }, [drawerIsOpen]);
+            setName(currentPermission.name);
+            setMatcher(currentPermission.matcher);
+            setMatcherType(currentPermission.matcherType);
+            setActionType(currentPermission.actionType);
+            setCategoryId(currentPermission.category?.id);
+        }, [drawerIsOpen, currentPermission]);
         return (
             <Drawer open={drawerIsOpen} onOpenChange={setDrawerIsOpen}>
                 <Drawer.Content>
@@ -67,6 +89,80 @@ const DrawerEditPermissionGeneral: React.FC<{
                                 />
                                 {error !== undefined && <Alert variant="error">{error}</Alert>}
                             </Grid>
+                            <Grid>
+                                <Label>Tipo de coincidencia</Label>
+                            </Grid>
+                            <Grid>
+                                <Select value={matcherType} onValueChange={(value) => setMatcherType(value as PermissionMatcherType)}>
+                                    <Select.Trigger>
+                                        <Select.Value placeholder="Seleccionar tipo" />
+                                    </Select.Trigger>
+                                    <Select.Content>
+                                        {Object.values(PermissionMatcherType).map((type) => (
+                                            <Select.Item key={type} value={type}>
+                                                {type}
+                                            </Select.Item>
+                                        ))}
+                                    </Select.Content>
+                                </Select>
+                            </Grid>
+                            <Grid>
+                                <Label>Matcher</Label>
+                            </Grid>
+                            <Grid>
+                                <Input
+                                    value={matcher}
+                                    placeholder="/admin/products"
+                                    onChange={(e) => {
+                                        setMatcher(e.target.value);
+                                        validateMatcher(e.target.value);
+                                    }}
+                                    aria-invalid={error !== undefined}
+                                />
+                                {error !== undefined && <Alert variant="error">{error}</Alert>}
+                            </Grid>
+                            <Grid>
+                                <Label>Tipo de acción</Label>
+                            </Grid>
+                            <Grid>
+                                <Select value={actionType} onValueChange={(value) => setActionType(value as PermissionActionType)}>
+                                    <Select.Trigger>
+                                        <Select.Value placeholder="Seleccionar acción" />
+                                    </Select.Trigger>
+                                    <Select.Content>
+                                        {Object.values(PermissionActionType).map((type) => (
+                                            <Select.Item key={type} value={type}>
+                                                {type}
+                                            </Select.Item>
+                                        ))}
+                                    </Select.Content>
+                                </Select>
+                            </Grid>
+                            <Grid>
+                                <Label>Categoría</Label>
+                            </Grid>
+                            <Grid>
+                                <Select
+                                    value={categoryId ?? "none"}
+                                    onValueChange={(value) =>
+                                        setCategoryId(value === "none" ? undefined : value)
+                                    }
+                                >
+                                    <Select.Trigger>
+                                        <Select.Value placeholder="Seleccionar categoría" />
+                                    </Select.Trigger>
+                                    <Select.Content>
+                                        <Select.Item value="none">Ninguna</Select.Item>
+                                        <Select.Separator />
+                                        {categories.map((cat) => (
+                                            <Select.Item key={cat.id} value={cat.id}>
+                                                {cat.name}
+                                            </Select.Item>
+                                        ))}
+                                    </Select.Content>
+                                </Select>
+                                <Text size="small">Elija una categoría o deje sin seleccionar.</Text>
+                            </Grid>
                         </Grid>
                     </Drawer.Body>
                     <Drawer.Footer>
@@ -74,12 +170,22 @@ const DrawerEditPermissionGeneral: React.FC<{
                             <Button variant="secondary">Cancelar</Button>
                         </Drawer.Close>
                         <Button
-                            disabled={error !== undefined}
+                            disabled={
+                                error !== undefined ||
+                                !name ||
+                                !matcher ||
+                                !matcherType ||
+                                !actionType
+                            }
                             onClick={() => {
-                                if (!error) {
+                                if (!error && name && matcher && matcherType && actionType) {
                                     setPermission({
                                         ...currentPermission,
                                         name,
+                                        matcher,
+                                        matcherType,
+                                        actionType,
+                                        category: categoryId ? { id: categoryId } : null,
                                     });
                                 }
                             }}
@@ -94,8 +200,9 @@ const DrawerEditPermissionGeneral: React.FC<{
 
 const RbacPermissionGeneral: React.FC<{
     rbacPermission: RbacPermission;
-    reloadTable: () => void
-}> = ({ rbacPermission, reloadTable }) => {
+    reloadTable: () => void;
+    categories: RbacPermissionCategory[];
+}> = ({ rbacPermission, reloadTable, categories }) => {
     const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
     function updatePermission(permission: RbacPermission) {
         sdk.client.fetch<{ message: string }>(`/admin/rbac/permissions/${permission.id}`, {
@@ -142,6 +249,7 @@ const RbacPermissionGeneral: React.FC<{
                 drawerIsOpen={drawerIsOpen}
                 setDrawerIsOpen={setDrawerIsOpen}
                 currentPermission={rbacPermission}
+                categories={categories}
                 setPermission={updatePermission}
             />
             <SectionRow title="Nombre" value={rbacPermission.name} />
@@ -160,6 +268,8 @@ export const RbacPermissionPage = () => {
     const { permissionId } = useParams();
     const [permission, setPermission] = useState<RbacPermission | undefined>(undefined);
     const [isLoading, setLoading] = useState(true);
+    const [categories, setCategories] = useState<RbacPermissionCategory[]>([]);
+    const [isLoadingCategories, setLoadingCategories] = useState(true);
     useEffect(() => {
         if (!isLoading) {
             return;
@@ -173,9 +283,24 @@ export const RbacPermissionPage = () => {
             })
             .catch((error) => {
                 console.error(error);
+                setLoading(false);
             });
     }, [isLoading]);
-    if (isLoading || !permission) {
+    useEffect(() => {
+        if (!isLoadingCategories) {
+            return;
+        }
+        sdk.client.fetch<RbacPermissionCategory[]>(`/admin/rbac/categories`)
+            .then((result) => {
+                setCategories(result);
+                setLoadingCategories(false);
+            })
+            .catch((error) => {
+                console.error(error);
+                setLoadingCategories(false);
+            });
+    }, [isLoadingCategories]);
+    if (isLoading || !permission || isLoadingCategories) {
         return <LoadingSpinner />;
     }
     return (
@@ -183,6 +308,7 @@ export const RbacPermissionPage = () => {
             <RbacPermissionGeneral
                 rbacPermission={permission}
                 reloadTable={() => setLoading(true)}
+                categories={categories}
             />
         </SingleColumnLayout>
     );

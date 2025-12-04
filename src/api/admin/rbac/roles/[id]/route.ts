@@ -35,9 +35,47 @@ export const GET = async (req: any, res: any) => {
 
 export const POST = async (req: any, res: any) => {
   const rbacModuleService = req.scope.resolve(RBAC_MODULE);
-  const updatedRole = await rbacModuleService.updateRbacRoles({
-    id: req.body.id,
-    name: req.body.name,
+  const roleId = req.params.id;
+  const { name, policies } = req.body ?? {};
+
+  if (name) {
+    await rbacModuleService.updateRbacRoles({
+      id: roleId,
+      name,
+    });
+  }
+
+  if (Array.isArray(policies)) {
+    const existingPolicies =
+      await rbacModuleService.listRbacPolicies({
+        role: roleId,
+      });
+
+    if (existingPolicies.length > 0) {
+      await rbacModuleService.deleteRbacPolicies({
+        id: existingPolicies.map((pol: any) => pol.id),
+      });
+    }
+
+    const policiesToCreate = policies
+      .map((policy: any) => ({
+        role: roleId,
+        permission: policy.permission?.id ?? policy.permission,
+        type: policy.type,
+      }))
+      .filter((policy: any) => policy.permission);
+
+    if (policiesToCreate.length > 0) {
+      await rbacModuleService.createRbacPolicies(policiesToCreate);
+    }
+  }
+
+  const updatedRole = await rbacModuleService.retrieveRbacRole(roleId, {
+    relations: [
+      "policies",
+      "policies.permission",
+      "policies.permission.category",
+    ],
   });
 
   res.json(updatedRole);

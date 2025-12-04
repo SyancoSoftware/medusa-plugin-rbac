@@ -25,7 +25,9 @@ export const GET = async (req: any, res: any) => {
   );
 
   const rbacRolesToUser = rolesWithUsers.map((role: any) => {
-    const rbacRoleFound = rbacRoles.find((storedRole: any) => storedRole.id);
+    const rbacRoleFound = rbacRoles.find(
+      (storedRole: any) => storedRole.id === role.id
+    );
 
     return {
       role: {

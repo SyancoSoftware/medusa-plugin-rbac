@@ -41,7 +41,7 @@ const deleteRoleWorkflow = createWorkflow(
         [Modules.USER]: {
           user_id: userId,
         },
-        rbacModuleService: {
+        [RBAC_MODULE]: {
           rbac_role_id: data.input.roleId,
         },
       }))

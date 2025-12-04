@@ -149,20 +149,30 @@ NQIDAQAB
       relations: ["policies", "policies.permission"],
     });
 
+    let hasAllowingPolicy = false;
+
     for (const configuredPolicy of rbacRole.policies as PolicyEntity[]) {
-      if (
-        this.evaluatePolicy(
-          configuredPolicy,
-          requestedType,
-          matcher,
-          actionType
-        ) === PolicyType.DENY
-      ) {
+      const evaluation = this.evaluatePolicy(
+        configuredPolicy,
+        requestedType,
+        matcher,
+        actionType
+      );
+
+      if (!evaluation) {
+        continue;
+      }
+
+      if (evaluation === PolicyType.DENY) {
         return false;
+      }
+
+      if (evaluation === PolicyType.ALLOW) {
+        hasAllowingPolicy = true;
       }
     }
 
-    return true;
+    return hasAllowingPolicy;
   }
 
   async testAuthorization(
@@ -181,20 +191,36 @@ NQIDAQAB
     const allowedActions: ActionType[] = [];
     const deniedActions: ActionType[] = [];
 
-    for (const configuredPolicy of rbacRole.policies as PolicyEntity[]) {
-      for (const actionType of Object.values(ActionType) as ActionType[]) {
-        if (
-          this.evaluatePolicy(
-            configuredPolicy,
-            requestedType,
-            matcher,
-            actionType
-          ) === PolicyType.DENY
-        ) {
-          deniedActions.push(actionType);
-        } else {
-          allowedActions.push(actionType);
+    for (const actionType of Object.values(ActionType) as ActionType[]) {
+      let matchedAllow = false;
+      let matchedDeny = false;
+
+      for (const configuredPolicy of rbacRole.policies as PolicyEntity[]) {
+        const evaluation = this.evaluatePolicy(
+          configuredPolicy,
+          requestedType,
+          matcher,
+          actionType
+        );
+
+        if (!evaluation) {
+          continue;
         }
+
+        if (evaluation === PolicyType.DENY) {
+          matchedDeny = true;
+          break;
+        }
+
+        if (evaluation === PolicyType.ALLOW) {
+          matchedAllow = true;
+        }
+      }
+
+      if (matchedDeny || !matchedAllow) {
+        deniedActions.push(actionType);
+      } else {
+        allowedActions.push(actionType);
       }
     }
 

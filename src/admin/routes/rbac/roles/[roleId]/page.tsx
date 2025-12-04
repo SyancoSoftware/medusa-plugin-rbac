@@ -15,7 +15,7 @@ import {
   Pencil,
 } from "@medusajs/icons";
 import { useParams } from "react-router-dom";
-import { AdminRbacPolicyType, ApiUser, Grid, LoadingSpinner, RbacPermissionCategory, RbacPolicy, RbacRole, RoleWithUsers, sdk } from "../../../../lib";
+import { AdminRbacPolicyType, ApiUser, Grid, LoadingSpinner, RbacPermission, RbacPermissionCategory, RbacPolicy, RbacRole, RoleWithUsers, sdk } from "../../../../lib";
 import { SingleColumnLayout } from "../../../../lib/single-column-layout";
 import { Header } from "../../../../lib/header";
 import { SectionRow } from "../../../../lib/section-row";
@@ -451,7 +451,147 @@ function PoliciesTable({ policies, viewType }: { policies: RbacPolicy[]; viewTyp
     </div>
   );
 }
-const RbacRoleAssignedPolicies: React.FC<{ rbacRole: RoleWithUsers }> = ({ rbacRole }) => {
+
+const EditPoliciesDrawer: React.FC<{
+  rbacRole: RoleWithUsers;
+  onUpdated: () => void;
+}> = ({ rbacRole, onUpdated }) => {
+  const [drawerIsOpen, setDrawerIsOpen] = useState(false);
+  const [permissions, setPermissions] = useState<RbacPermission[]>([]);
+  const [allowedPermissions, setAllowedPermissions] = useState<Set<string>>(new Set());
+  const [isLoadingPermissions, setLoadingPermissions] = useState(false);
+  const [isSaving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (!drawerIsOpen) {
+      return;
+    }
+    setAllowedPermissions(
+      new Set(
+        rbacRole.policies
+          .filter((pol) => pol.type === AdminRbacPolicyType.ALLOW)
+          .map((pol) => pol.permission.id),
+      ),
+    );
+  }, [drawerIsOpen, rbacRole]);
+
+  useEffect(() => {
+    if (!drawerIsOpen || isLoadingPermissions || permissions.length > 0) {
+      return;
+    }
+    setLoadingPermissions(true);
+    sdk.client.fetch<RbacPermission[]>(`/admin/rbac/permissions`)
+      .then((result) => {
+        setPermissions(result);
+        setLoadingPermissions(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        setLoadingPermissions(false);
+      });
+  }, [drawerIsOpen, isLoadingPermissions, permissions.length]);
+
+  const togglePermission = (permissionId: string, allowed: boolean) => {
+    setAllowedPermissions((prev) => {
+      const next = new Set(prev);
+      if (allowed) {
+        next.add(permissionId);
+      } else {
+        next.delete(permissionId);
+      }
+      return next;
+    });
+  };
+
+  const savePolicies = () => {
+    setSaving(true);
+    const policiesPayload = Array.from(allowedPermissions).map((permissionId) => ({
+      permission: permissionId,
+      type: AdminRbacPolicyType.ALLOW,
+    }));
+    sdk.client.fetch<{ message?: string }>(`/admin/rbac/roles/${rbacRole.id}`, {
+      method: "POST",
+      body: {
+        name: rbacRole.name,
+        policies: policiesPayload,
+      },
+    })
+      .then(() => {
+        onUpdated();
+        setDrawerIsOpen(false);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => setSaving(false));
+  };
+
+  return (
+    <Drawer open={drawerIsOpen} onOpenChange={setDrawerIsOpen}>
+      <Drawer.Trigger asChild>
+        <Button variant="secondary">Editar politicas</Button>
+      </Drawer.Trigger>
+      <Drawer.Content>
+        <Drawer.Header>
+          <Drawer.Title>Editar politicas del rol</Drawer.Title>
+          <Drawer.Description>
+            Selecciona los permisos que este rol puede utilizar.
+          </Drawer.Description>
+        </Drawer.Header>
+        <Drawer.Body className="space-y-4">
+          {isLoadingPermissions && <LoadingSpinner />}
+          {!isLoadingPermissions && (
+            <Table>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>Permiso</Table.HeaderCell>
+                  <Table.HeaderCell>Matcher</Table.HeaderCell>
+                  <Table.HeaderCell>Accion</Table.HeaderCell>
+                  <Table.HeaderCell>Permitir</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {permissions.map((permission) => {
+                  const isAllowed = allowedPermissions.has(permission.id);
+                  return (
+                    <Table.Row key={permission.id}>
+                      <Table.Cell>{permission.name}</Table.Cell>
+                      <Table.Cell>{permission.matcher}</Table.Cell>
+                      <Table.Cell>{permission.actionType}</Table.Cell>
+                      <Table.Cell>
+                        <Switch
+                          checked={isAllowed}
+                          onCheckedChange={(checked) =>
+                            togglePermission(permission.id, checked)
+                          }
+                        />
+                      </Table.Cell>
+                      {permission.id}
+                    </Table.Row>
+                  );
+                })}
+              </Table.Body>
+            </Table>
+          )}
+        </Drawer.Body>
+        <Drawer.Footer>
+          <Drawer.Close asChild>
+            <Button variant="secondary">Cancelar</Button>
+          </Drawer.Close>
+          <Button
+            isLoading={isSaving}
+            disabled={isLoadingPermissions}
+            onClick={savePolicies}
+          >
+            Guardar
+          </Button>
+        </Drawer.Footer>
+      </Drawer.Content>
+    </Drawer>
+  );
+};
+
+const RbacRoleAssignedPolicies: React.FC<{ rbacRole: RoleWithUsers; reloadRole: () => void }> = ({ rbacRole, reloadRole }) => {
   const [viewType, setViewType] = useState(
     "permission",
     /* PERMISSION */
@@ -487,6 +627,15 @@ const RbacRoleAssignedPolicies: React.FC<{ rbacRole: RoleWithUsers }> = ({ rbacR
                 </Grid>
               ),
             },
+            {
+              type: "custom",
+              children: (
+                <EditPoliciesDrawer
+                  rbacRole={rbacRole}
+                  onUpdated={reloadRole}
+                />
+              ),
+            },
           ]}
         />
         <Grid>
@@ -515,6 +664,7 @@ export const RbacRolePage = () => {
       })
       .catch((error) => {
         console.error(error);
+        setLoading(false);
       });
   }, [isLoading]);
   if (isLoading || !role) {
@@ -524,7 +674,10 @@ export const RbacRolePage = () => {
     <SingleColumnLayout>
       <RbacRoleGeneral rbacRole={role} reloadTable={() => setLoading(true)} />
       <RbacRoleAssignedUsers rbacRole={role} />
-      <RbacRoleAssignedPolicies rbacRole={role} />
+      <RbacRoleAssignedPolicies
+        rbacRole={role}
+        reloadRole={() => setLoading(true)}
+      />
     </SingleColumnLayout>
   );
 };

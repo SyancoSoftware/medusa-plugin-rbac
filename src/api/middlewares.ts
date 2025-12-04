@@ -99,8 +99,9 @@ export default defineMiddlewares({
             );
 
           if (!authorization) {
-            return res.json({
+            return res.status(403).json({
               unauthorized: true,
+              message: "No autorizado para acceder a este recurso.",
             });
           }
 
