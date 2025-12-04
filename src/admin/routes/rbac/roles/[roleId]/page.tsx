@@ -528,3 +528,5 @@ export const RbacRolePage = () => {
     </SingleColumnLayout>
   );
 };
+
+export default RbacRolePage;

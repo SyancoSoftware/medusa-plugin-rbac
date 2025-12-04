@@ -187,3 +187,5 @@ export const RbacPermissionPage = () => {
         </SingleColumnLayout>
     );
 };
+
+export default RbacPermissionPage;
