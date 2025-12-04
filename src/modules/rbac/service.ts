@@ -1,7 +1,7 @@
 import crypto from "crypto";
 
 import { MedusaService } from "@medusajs/framework/utils";
-import { pathToRegexp } from "path-to-regexp";
+import { match as pathMatch } from "path-to-regexp";
 
 import { ActionType, PermissionMatcherType, PolicyType } from "./types";
 import RbacRole from "./models/rbac-role";
@@ -130,8 +130,10 @@ NQIDAQAB
       const requestMatcher = normalizePath(matcher);
 
       try {
-        const regexp = pathToRegexp(configuredMatcher === "" ? "/" : configuredMatcher);
-        if (regexp.test(requestMatcher) && policy.permission.actionType === actionType) {
+        const matchFn = pathMatch(configuredMatcher === "" ? "/" : configuredMatcher, {
+          decode: decodeURIComponent,
+        });
+        if (matchFn(requestMatcher) && policy.permission.actionType === actionType) {
           return policy.type;
         }
       } catch (e) {

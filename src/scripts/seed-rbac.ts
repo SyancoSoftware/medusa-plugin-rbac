@@ -181,10 +181,12 @@ export default async function seedRbacData({
     await rbacModuleService.addRole({
       name: "Administrador",
       policies: permissions.map((perm: any) => ({
-        permission: { id: perm.id },
-        matcher: perm.matcher,
-        matcherType: perm.matcherType,
-        actionType: perm.actionType,
+        permission: {
+          id: perm.id,
+          matcher: perm.matcher,
+          matcherType: perm.matcherType,
+          actionType: perm.actionType,
+        },
         type: "allow",
       })),
     });

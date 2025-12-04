@@ -57,7 +57,7 @@ export const POST = async (req: any, res: any) => {
     });
   }
 
-  const { role } = await replaceRolePoliciesWorkflow(req.scope).run({
+  const { result } = await replaceRolePoliciesWorkflow(req.scope).run({
     input: {
       roleId,
       name,
@@ -65,5 +65,5 @@ export const POST = async (req: any, res: any) => {
     },
   });
 
-  res.json(role);
+  res.json(result.role);
 };
