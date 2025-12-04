@@ -60,6 +60,10 @@ export default defineMiddlewares({
             return next();
           }
 
+          const normalizedPath = (rawRequest.baseUrl || "")
+            .split("?")[0]
+            .replace(/\/+$/, "") || "/";
+
           const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
           const {
             data: rolesWithUsers,
@@ -94,7 +98,7 @@ export default defineMiddlewares({
             await rbacModuleService.evaluateAuthorization(
               existingRole,
               PermissionMatcherType.API,
-              rawRequest.baseUrl,
+              normalizedPath,
               rbacAction
             );
 

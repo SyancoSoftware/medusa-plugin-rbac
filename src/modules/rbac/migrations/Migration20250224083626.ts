@@ -18,6 +18,9 @@ export class Migration20250224083626 extends Migration {
       `CREATE INDEX IF NOT EXISTS "IDX_rbac_permission_deleted_at" ON "rbac_permission" (deleted_at) WHERE deleted_at IS NULL;`
     );
     this.addSql(
+      `CREATE UNIQUE INDEX IF NOT EXISTS "UQ_rbac_permission_matcher" ON "rbac_permission" (COALESCE("matcherType", ''), COALESCE("matcher", ''), COALESCE("actionType", '')) WHERE deleted_at IS NULL;`
+    );
+    this.addSql(
       `create table if not exists "rbac_role" ("id" text not null, "name" text not null, "created_at" timestamptz not null default now(), "updated_at" timestamptz not null default now(), "deleted_at" timestamptz null, constraint "rbac_role_pkey" primary key ("id"));`
     );
     this.addSql(
@@ -55,6 +58,9 @@ export class Migration20250224083626 extends Migration {
     );
     this.addSql(
       `alter table if exists "rbac_policy" drop constraint if exists "rbac_policy_role_id_foreign";`
+    );
+    this.addSql(
+      `DROP INDEX IF EXISTS "UQ_rbac_permission_matcher";`
     );
     this.addSql(`drop table if exists "rbac_permission_category" cascade;`);
     this.addSql(`drop table if exists "rbac_permission" cascade;`);

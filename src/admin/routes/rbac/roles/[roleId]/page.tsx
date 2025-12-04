@@ -9,13 +9,14 @@ import {
   Badge,
   Input,
   Switch,
+  Select,
 } from "@medusajs/ui";
 import React, { useState, useEffect, useMemo } from "react";
 import {
   Pencil,
 } from "@medusajs/icons";
 import { useParams } from "react-router-dom";
-import { AdminRbacPolicyType, ApiUser, Grid, LoadingSpinner, RbacPermission, RbacPermissionCategory, RbacPolicy, RbacRole, RoleWithUsers, sdk } from "../../../../lib";
+import { AdminRbacPolicyType, ApiUser, Grid, LoadingSpinner, MemberWithRole, RbacPermission, RbacPermissionCategory, RbacPolicy, RbacRole, RoleWithUsers, sdk } from "../../../../lib";
 import { SingleColumnLayout } from "../../../../lib/single-column-layout";
 import { Header } from "../../../../lib/header";
 import { SectionRow } from "../../../../lib/section-row";
@@ -236,12 +237,123 @@ function UsersTable({ users }: { users: ApiUser[] }) {
     </div>
   );
 }
-const RbacRoleAssignedUsers: React.FC<{ rbacRole: RoleWithUsers }> = ({ rbacRole }) => {
+
+const AssignUserDrawer: React.FC<{
+  roleId: string;
+  onAssigned: () => void;
+}> = ({ roleId, onAssigned }) => {
+  const [open, setOpen] = useState(false);
+  const [members, setMembers] = useState<MemberWithRole[]>([]);
+  const [isLoading, setLoading] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<string | undefined>(undefined);
+  const [isAssigning, setAssigning] = useState(false);
+
+  useEffect(() => {
+    if (!open || isLoading || members.length > 0) {
+      return;
+    }
+    setLoading(true);
+    sdk.client.fetch<MemberWithRole[]>(`/admin/rbac/members`)
+      .then((result) => {
+        setMembers(result);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        setLoading(false);
+      });
+  }, [open, isLoading, members.length]);
+
+  const availableUsers = members.filter(
+    (member) => member.role?.id !== roleId
+  );
+
+  const handleAssign = () => {
+    if (!selectedUser) return;
+    setAssigning(true);
+    sdk.client.fetch(`/admin/rbac/members/assignments`, {
+      method: "POST",
+      body: {
+        userId: selectedUser,
+        roleId,
+      },
+    })
+      .then(() => {
+        onAssigned();
+        setOpen(false);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => setAssigning(false));
+  };
+
+  return (
+    <Drawer open={open} onOpenChange={setOpen}>
+      <Drawer.Trigger asChild>
+        <Button variant="secondary">Asignar usuario</Button>
+      </Drawer.Trigger>
+      <Drawer.Content>
+        <Drawer.Header>
+          <Drawer.Title>Asignar usuario al rol</Drawer.Title>
+        </Drawer.Header>
+        <Drawer.Body className="space-y-4">
+          {isLoading && <LoadingSpinner />}
+          {!isLoading && (
+            <>
+              <Label>Seleccionar usuario</Label>
+              <Select
+                value={selectedUser}
+                onValueChange={(value) => setSelectedUser(value)}
+              >
+                <Select.Trigger>
+                  <Select.Value placeholder="Seleccionar usuario" />
+                </Select.Trigger>
+                <Select.Content>
+                  {availableUsers.map((member) => (
+                    <Select.Item key={member.user.id} value={member.user.id}>
+                      {member.user.email}
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select>
+              {availableUsers.length === 0 && (
+                <Text size="small">No hay usuarios disponibles para asignar.</Text>
+              )}
+            </>
+          )}
+        </Drawer.Body>
+        <Drawer.Footer>
+          <Drawer.Close asChild>
+            <Button variant="secondary">Cancelar</Button>
+          </Drawer.Close>
+          <Button
+            onClick={handleAssign}
+            isLoading={isAssigning}
+            disabled={!selectedUser || availableUsers.length === 0}
+          >
+            Asignar
+          </Button>
+        </Drawer.Footer>
+      </Drawer.Content>
+    </Drawer>
+  );
+};
+
+const RbacRoleAssignedUsers: React.FC<{ rbacRole: RoleWithUsers; reload: () => void }> = ({ rbacRole, reload }) => {
   return (
     <Container>
       <Grid container direction="column" className="divide-y">
         <Grid>
-          <Header title={`Usuarios asignados`} />
+          <Header
+            title={`Usuarios asignados`}
+            actions={[
+              {
+                type: "custom",
+                children: <AssignUserDrawer roleId={rbacRole.id} onAssigned={reload} />,
+              },
+            ]}
+          />
         </Grid>
         <Grid>
           <UsersTable users={rbacRole.users} />
@@ -458,7 +570,7 @@ const EditPoliciesDrawer: React.FC<{
 }> = ({ rbacRole, onUpdated }) => {
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   const [permissions, setPermissions] = useState<RbacPermission[]>([]);
-  const [allowedPermissions, setAllowedPermissions] = useState<Set<string>>(new Set());
+  const [policySelection, setPolicySelection] = useState<Map<string, AdminRbacPolicyType | "none">>(new Map());
   const [isLoadingPermissions, setLoadingPermissions] = useState(false);
   const [isSaving, setSaving] = useState(false);
 
@@ -466,13 +578,11 @@ const EditPoliciesDrawer: React.FC<{
     if (!drawerIsOpen) {
       return;
     }
-    setAllowedPermissions(
-      new Set(
-        rbacRole.policies
-          .filter((pol) => pol.type === AdminRbacPolicyType.ALLOW)
-          .map((pol) => pol.permission.id),
-      ),
-    );
+    const selection = new Map<string, AdminRbacPolicyType | "none">();
+    rbacRole.policies.forEach((pol) => {
+      selection.set(pol.permission.id, pol.type);
+    });
+    setPolicySelection(selection);
   }, [drawerIsOpen, rbacRole]);
 
   useEffect(() => {
@@ -491,24 +601,25 @@ const EditPoliciesDrawer: React.FC<{
       });
   }, [drawerIsOpen, isLoadingPermissions, permissions.length]);
 
-  const togglePermission = (permissionId: string, allowed: boolean) => {
-    setAllowedPermissions((prev) => {
-      const next = new Set(prev);
-      if (allowed) {
-        next.add(permissionId);
-      } else {
-        next.delete(permissionId);
-      }
+  const setPermissionPolicy = (
+    permissionId: string,
+    type: AdminRbacPolicyType | "none"
+  ) => {
+    setPolicySelection((prev) => {
+      const next = new Map(prev);
+      next.set(permissionId, type);
       return next;
     });
   };
 
   const savePolicies = () => {
     setSaving(true);
-    const policiesPayload = Array.from(allowedPermissions).map((permissionId) => ({
-      permission: permissionId,
-      type: AdminRbacPolicyType.ALLOW,
-    }));
+    const policiesPayload = Array.from(policySelection.entries())
+      .filter(([, type]) => type !== "none")
+      .map(([permissionId, type]) => ({
+        permission: permissionId,
+        type,
+      }));
     sdk.client.fetch<{ message?: string }>(`/admin/rbac/roles/${rbacRole.id}`, {
       method: "POST",
       body: {
@@ -547,24 +658,41 @@ const EditPoliciesDrawer: React.FC<{
                   <Table.HeaderCell>Permiso</Table.HeaderCell>
                   <Table.HeaderCell>Matcher</Table.HeaderCell>
                   <Table.HeaderCell>Accion</Table.HeaderCell>
-                  <Table.HeaderCell>Permitir</Table.HeaderCell>
+                  <Table.HeaderCell>Decision</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
                 {permissions.map((permission) => {
-                  const isAllowed = allowedPermissions.has(permission.id);
+                  const selectedDecision =
+                    policySelection.get(permission.id) ?? "none";
                   return (
                     <Table.Row key={permission.id}>
                       <Table.Cell>{permission.name}</Table.Cell>
                       <Table.Cell>{permission.matcher}</Table.Cell>
                       <Table.Cell>{permission.actionType}</Table.Cell>
                       <Table.Cell>
-                        <Switch
-                          checked={isAllowed}
-                          onCheckedChange={(checked) =>
-                            togglePermission(permission.id, checked)
+                        <Select
+                          value={selectedDecision}
+                          onValueChange={(value) =>
+                            setPermissionPolicy(
+                              permission.id,
+                              value as AdminRbacPolicyType | "none"
+                            )
                           }
-                        />
+                        >
+                          <Select.Trigger>
+                            <Select.Value placeholder="Seleccionar decision" />
+                          </Select.Trigger>
+                          <Select.Content>
+                            <Select.Item value="none">Ninguno</Select.Item>
+                            <Select.Item value={AdminRbacPolicyType.ALLOW}>
+                              Permitir
+                            </Select.Item>
+                            <Select.Item value={AdminRbacPolicyType.DENY}>
+                              Denegar
+                            </Select.Item>
+                          </Select.Content>
+                        </Select>
                       </Table.Cell>
                       {permission.id}
                     </Table.Row>
