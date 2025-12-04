@@ -117,13 +117,31 @@ NQIDAQAB
     matcher: string,
     actionType: ActionType
   ): PolicyType | undefined {
+    const normalizePath = (value: string) =>
+      value.replace(/\/+$/, "") || "/";
+
     if (policy.permission.matcherType !== requestedType) {
       return undefined;
     }
 
     if (requestedType === PermissionMatcherType.API) {
+      const configuredMatcher = normalizePath(policy.permission.matcher);
+      const requestMatcher = normalizePath(matcher);
+      const wildcard = configuredMatcher.includes("*");
+      const regex = wildcard
+        ? new RegExp(
+            "^" +
+              configuredMatcher
+                .split("*")
+                .map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+                .join(".*") +
+              "$"
+          )
+        : null;
+
       if (
-        matcher.includes(policy.permission.matcher) &&
+        ((regex && regex.test(requestMatcher)) ||
+          (!regex && requestMatcher === configuredMatcher)) &&
         policy.permission.actionType === actionType
       ) {
         return policy.type;
@@ -150,6 +168,7 @@ NQIDAQAB
     });
 
     let hasAllowingPolicy = false;
+    let hasMatchedPolicy = false;
 
     for (const configuredPolicy of rbacRole.policies as PolicyEntity[]) {
       const evaluation = this.evaluatePolicy(
@@ -163,6 +182,8 @@ NQIDAQAB
         continue;
       }
 
+      hasMatchedPolicy = true;
+
       if (evaluation === PolicyType.DENY) {
         return false;
       }
@@ -170,6 +191,10 @@ NQIDAQAB
       if (evaluation === PolicyType.ALLOW) {
         hasAllowingPolicy = true;
       }
+    }
+
+    if (!hasMatchedPolicy) {
+      return true;
     }
 
     return hasAllowingPolicy;
@@ -194,6 +219,7 @@ NQIDAQAB
     for (const actionType of Object.values(ActionType) as ActionType[]) {
       let matchedAllow = false;
       let matchedDeny = false;
+      let matchedAny = false;
 
       for (const configuredPolicy of rbacRole.policies as PolicyEntity[]) {
         const evaluation = this.evaluatePolicy(
@@ -207,6 +233,8 @@ NQIDAQAB
           continue;
         }
 
+        matchedAny = true;
+
         if (evaluation === PolicyType.DENY) {
           matchedDeny = true;
           break;
@@ -217,10 +245,12 @@ NQIDAQAB
         }
       }
 
-      if (matchedDeny || !matchedAllow) {
+      if (matchedDeny) {
         deniedActions.push(actionType);
-      } else {
+      } else if (matchedAllow || !matchedAny) {
         allowedActions.push(actionType);
+      } else {
+        deniedActions.push(actionType);
       }
     }
 

@@ -31,6 +31,13 @@ export const POST = async (req: any, res: any) => {
     category,
   } = req.body ?? {};
 
+  if (!name || !matcher || !matcherType || !actionType) {
+    throw new MedusaError(
+      MedusaError.Types.INVALID_DATA,
+      "name, matcher, matcherType y actionType son obligatorios"
+    );
+  }
+
   if (matcher && matcherType && actionType) {
     const [existingPermissions] =
       await rbacModuleService.listAndCountRbacPermissions({

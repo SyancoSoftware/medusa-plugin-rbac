@@ -1,4 +1,4 @@
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
+import { ContainerRegistrationKeys, MedusaError } from "@medusajs/framework/utils";
 
 import { RBAC_MODULE } from "../../../../../modules/rbac";
 
@@ -37,6 +37,24 @@ export const POST = async (req: any, res: any) => {
   const rbacModuleService = req.scope.resolve(RBAC_MODULE);
   const roleId = req.params.id;
   const { name, policies } = req.body ?? {};
+
+  if (!name) {
+    throw new MedusaError(
+      MedusaError.Types.INVALID_DATA,
+      "name es obligatorio"
+    );
+  }
+
+  if (Array.isArray(policies)) {
+    policies.forEach((policy: any) => {
+      if (!policy.permission || !policy.type) {
+        throw new MedusaError(
+          MedusaError.Types.INVALID_DATA,
+          "Cada politica necesita permission y type"
+        );
+      }
+    });
+  }
 
   if (name) {
     await rbacModuleService.updateRbacRoles({

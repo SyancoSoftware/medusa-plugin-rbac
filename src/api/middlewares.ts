@@ -55,6 +55,8 @@ export default defineMiddlewares({
       middlewares: [
         async (req: any, res: any, next: () => void) => {
           const rawRequest = req as any & { baseUrl: string };
+          const logger =
+            (req.scope.resolve?.("logger") as any) || console;
 
           if (rawRequest.baseUrl === "/admin/rbac/check") {
             return next();
@@ -103,12 +105,18 @@ export default defineMiddlewares({
             );
 
           if (!authorization) {
+            logger?.info?.(
+              `[RBAC] deny actor=${actorId} method=${rawRequest.method} path=${normalizedPath}`
+            );
             return res.status(403).json({
               unauthorized: true,
               message: "No autorizado para acceder a este recurso.",
             });
           }
 
+          logger?.debug?.(
+            `[RBAC] allow actor=${actorId} method=${rawRequest.method} path=${normalizedPath}`
+          );
           return next();
         },
       ],
