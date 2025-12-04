@@ -187,7 +187,7 @@ export default async function seedRbacData({
           matcherType: perm.matcherType,
           actionType: perm.actionType,
         },
-        type: "allow",
+        type: "allow" as any,
       })),
     });
   } else {
